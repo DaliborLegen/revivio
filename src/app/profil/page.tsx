@@ -14,6 +14,7 @@ import {
   Download,
   Sparkles,
   ArrowRight,
+  Trash2,
 } from "lucide-react";
 
 type Profile = {
@@ -82,6 +83,18 @@ function DashboardContent() {
     }
     load();
   }, []);
+
+  const deleteRestoration = async (id: string) => {
+    if (!confirm("Ali ste prepričani, da želite trajno izbrisati to obnovo?")) return;
+    try {
+      const res = await fetch(`/api/restorations?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        setRestorations((prev) => prev.filter((r) => r.id !== id));
+      }
+    } catch {
+      // silent fail
+    }
+  };
 
   if (loading) {
     return (
@@ -246,15 +259,23 @@ function DashboardContent() {
                       </div>
                     )}
 
-                    {r.restored_url && (
-                      <a
-                        href={r.restored_url}
-                        download
-                        className="absolute top-2 right-2 bg-[#0e0c0a]/80 p-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                    <div className="absolute top-2 right-2 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity">
+                      {r.restored_url && (
+                        <a
+                          href={r.restored_url}
+                          download
+                          className="bg-[#0e0c0a]/80 p-1.5 rounded-lg"
+                        >
+                          <Download className="w-4 h-4 text-[#d4a054]" />
+                        </a>
+                      )}
+                      <button
+                        onClick={() => deleteRestoration(r.id)}
+                        className="bg-[#0e0c0a]/80 p-1.5 rounded-lg hover:bg-red-500/30 transition-colors"
                       >
-                        <Download className="w-4 h-4 text-[#d4a054]" />
-                      </a>
-                    )}
+                        <Trash2 className="w-4 h-4 text-red-400" />
+                      </button>
+                    </div>
                   </div>
 
                   <div className="p-3 flex items-center justify-between">
