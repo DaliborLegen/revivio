@@ -2,12 +2,12 @@
 
 import { useLang } from "@/lib/lang-context";
 import { createClient } from "@/lib/supabase";
-import { Camera, Globe, Menu, X, LogOut, User } from "lucide-react";
+import { Camera, Globe, Menu, X, LogOut, User, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
 export function Navbar() {
-  const { lang, t, toggleLang } = useLang();
+  const { lang, t, toggleLang, theme, toggleTheme } = useLang();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<SupaUser | null>(null);
@@ -75,6 +75,12 @@ export function Navbar() {
 
         <div className="hidden items-center gap-3 md:flex">
           <button
+            onClick={toggleTheme}
+            className="flex items-center gap-1.5 rounded-full border border-[#d4a054]/15 px-3 py-1.5 text-xs font-medium text-[#8a8279] transition-all hover:border-[#d4a054]/30 hover:text-[#d4a054]"
+          >
+            {theme === "dark" ? <Sun className="size-3.5" /> : <Moon className="size-3.5" />}
+          </button>
+          <button
             onClick={toggleLang}
             className="flex items-center gap-1.5 rounded-full border border-[#d4a054]/15 px-3 py-1.5 text-xs font-medium text-[#8a8279] transition-all hover:border-[#d4a054]/30 hover:text-[#d4a054]"
           >
@@ -122,6 +128,12 @@ export function Navbar() {
 
         {/* Mobile toggle */}
         <div className="flex items-center gap-2 md:hidden">
+          <button
+            onClick={toggleTheme}
+            className="flex size-9 items-center justify-center rounded-full border border-[#d4a054]/15 text-[#8a8279]"
+          >
+            {theme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
+          </button>
           <button
             onClick={toggleLang}
             className="flex size-9 items-center justify-center rounded-full border border-[#d4a054]/15 text-[#8a8279]"

@@ -54,7 +54,8 @@
   --color-surface-overlay: rgba(28, 26, 23, 0.85);
 }
 
-:root {
+:root,
+html.dark {
   --background: #0e0d0b;
   --foreground: #f0ebe4;
   --card: #161412;
@@ -87,6 +88,62 @@
   --sidebar-accent-foreground: #f0ebe4;
   --sidebar-border: rgba(212, 160, 84, 0.12);
   --sidebar-ring: #d4a054;
+}
+
+html.light {
+  --background: #f8f6f3;
+  --foreground: #1a1815;
+  --card: #ffffff;
+  --card-foreground: #1a1815;
+  --popover: #ffffff;
+  --popover-foreground: #1a1815;
+  --primary: #b8862e;
+  --primary-foreground: #ffffff;
+  --secondary: #f0ebe4;
+  --secondary-foreground: #1a1815;
+  --muted: #f0ebe4;
+  --muted-foreground: #6a6259;
+  --accent: #f0ebe4;
+  --accent-foreground: #1a1815;
+  --border: rgba(180, 140, 60, 0.15);
+  --input: rgba(180, 140, 60, 0.2);
+  --ring: #b8862e;
+  --sidebar: #f8f6f3;
+  --sidebar-foreground: #1a1815;
+}
+
+/* Light theme overrides for hardcoded colors */
+html.light body { background: #f8f6f3; color: #1a1815; }
+html.light body::after { opacity: 0.015; }
+
+/* Backgrounds */
+html.light [class*="bg-[#0e0d0b]"] { background-color: #f8f6f3 !important; }
+html.light [class*="bg-[#161412]"] { background-color: #ffffff !important; }
+html.light [class*="bg-[#1c1a17]"] { background-color: #f0ebe4 !important; }
+html.light [class*="bg-[#141210]"] { background-color: #f5f3f0 !important; }
+html.light [class*="bg-[#1e1c19]"] { background-color: #e8e4de !important; }
+
+/* Text colors */
+html.light [class*="text-[#f0ebe4]"] { color: #1a1815 !important; }
+html.light [class*="text-[#8a8279]"] { color: #6a6259 !important; }
+html.light [class*="text-[#6a6259]"] { color: #8a8279 !important; }
+html.light [class*="text-[#4a4439]"] { color: #a09889 !important; }
+html.light [class*="text-[#c4bdb4]"] { color: #4a4439 !important; }
+
+/* Borders */
+html.light [class*="border-[#d4a054]"] { border-color: rgba(180, 140, 60, 0.2) !important; }
+
+/* Nav */
+html.light nav.bg-\[\#0e0d0b\]\/90,
+html.light [class*="bg-[#0e0d0b]/90"] { background-color: rgba(248, 246, 243, 0.9) !important; }
+html.light [class*="bg-[#0e0d0b]/95"] { background-color: rgba(248, 246, 243, 0.95) !important; }
+
+/* Gradient buttons stay the same (gold) */
+
+/* Cards shadow */
+html.light .card-hover:hover {
+  box-shadow: 0 20px 60px -12px rgba(180, 140, 60, 0.12),
+              0 0 0 1px rgba(180, 140, 60, 0.08);
 }
 
 @layer base {

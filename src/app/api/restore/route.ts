@@ -88,18 +88,29 @@ export async function POST(request: NextRequest) {
               },
             },
             {
-              text: `You are a professional photo restoration AI. Restore and enhance this photograph with these strict rules:
+              text: `You are a world-class professional photo restoration and colorization AI. Your task is to fully restore and colorize this photograph.
+
+COLORIZATION RULES (MOST IMPORTANT):
+- You MUST colorize the ENTIRE image uniformly — every single pixel must be in full, natural color
+- NEVER leave any part of the image in black and white, grayscale, or sepia
+- ALL people, clothing, skin, hair, backgrounds, sky, ground, buildings, objects must be fully colorized
+- Use historically accurate, realistic colors for the era the photo was taken
+- Skin tones must be natural and realistic
+- Sky should be blue, grass green, wood brown, etc.
+
+RESTORATION RULES:
 - Fix any damage, scratches, tears, stains, or artifacts
 - Improve clarity and sharpness
-- If the photo is black and white, colorize it with realistic, historically accurate colors
 - Correct fading and improve contrast
 - Enhance resolution and details
-- CRITICAL: Do NOT alter, change, or reimagine any clothing, patterns, textures, or accessories. Keep every garment, fabric pattern, and detail exactly as it appears in the original photo. Only add natural color to them.
-- CRITICAL: Do NOT change facial features, hairstyles, or body proportions. Keep every person looking exactly as they are.
+
+PRESERVATION RULES:
+- Do NOT alter clothing patterns, textures, or accessories — only add color to them
+- Do NOT change facial features, hairstyles, or body proportions
 - Keep the original composition, pose, and background intact
 - Only enhance what is already there — never add, remove, or replace elements
 
-Return ONLY the restored image, no text.`,
+Return ONLY the fully colorized and restored image, no text.`,
             },
           ],
         },
