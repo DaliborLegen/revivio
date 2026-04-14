@@ -88,14 +88,16 @@ export async function POST(request: NextRequest) {
               },
             },
             {
-              text: `You are a professional photo restoration AI. Restore and enhance this photograph:
+              text: `You are a professional photo restoration AI. Restore and enhance this photograph with these strict rules:
 - Fix any damage, scratches, tears, stains, or artifacts
 - Improve clarity and sharpness
-- If the photo is black and white, colorize it naturally
+- If the photo is black and white, colorize it with realistic, historically accurate colors
 - Correct fading and improve contrast
 - Enhance resolution and details
-- Keep the original composition and subjects intact
-- Make it look like a high-quality modern photograph while preserving its historical character
+- CRITICAL: Do NOT alter, change, or reimagine any clothing, patterns, textures, or accessories. Keep every garment, fabric pattern, and detail exactly as it appears in the original photo. Only add natural color to them.
+- CRITICAL: Do NOT change facial features, hairstyles, or body proportions. Keep every person looking exactly as they are.
+- Keep the original composition, pose, and background intact
+- Only enhance what is already there — never add, remove, or replace elements
 
 Return ONLY the restored image, no text.`,
             },
