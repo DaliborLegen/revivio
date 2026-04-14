@@ -138,13 +138,41 @@ html.light nav.bg-\[\#0e0d0b\]\/90,
 html.light [class*="bg-[#0e0d0b]/90"] { background-color: rgba(248, 246, 243, 0.9) !important; }
 html.light [class*="bg-[#0e0d0b]/95"] { background-color: rgba(248, 246, 243, 0.95) !important; }
 
-/* Gradient buttons stay the same (gold) */
+/* Gradient backgrounds for sections */
+html.light [class*="from-[#0e0d0b]"] { --tw-gradient-from: #f8f6f3 !important; }
+html.light [class*="via-[#0e0d0b]"] { --tw-gradient-via: #f8f6f3 !important; }
+html.light [class*="to-[#0e0d0b]"] { --tw-gradient-to: #f8f6f3 !important; }
+html.light [class*="from-[#141210]"] { --tw-gradient-from: #f5f3f0 !important; }
+html.light [class*="to-[#141210]"] { --tw-gradient-to: #f5f3f0 !important; }
+html.light [class*="from-[#1c1a17]"] { --tw-gradient-from: #f0ebe4 !important; }
+html.light [class*="via-[#1c1a17]"] { --tw-gradient-via: #f0ebe4 !important; }
+html.light [class*="to-[#1c1a17]"] { --tw-gradient-to: #f0ebe4 !important; }
+html.light [class*="from-[#161412]"] { --tw-gradient-from: #ffffff !important; }
+html.light [class*="via-[#161412]"] { --tw-gradient-via: #ffffff !important; }
+html.light [class*="to-[#161412]"] { --tw-gradient-to: #ffffff !important; }
+
+/* Glows and blurs - softer in light */
+html.light [class*="bg-[#d4a054]/5"] { background-color: rgba(180, 140, 60, 0.04) !important; }
+html.light [class*="bg-[#d4a054]/4"] { background-color: rgba(180, 140, 60, 0.03) !important; }
+html.light [class*="bg-[#d4a054]/8"] { background-color: rgba(180, 140, 60, 0.06) !important; }
+
+/* Step number circle border */
+html.light [class*="border-[#0e0d0b]"] { border-color: #f8f6f3 !important; }
+
+/* Noise overlay - nearly invisible in light */
+html.light .noise-bg::before { opacity: 0.02; }
 
 /* Cards shadow */
 html.light .card-hover:hover {
   box-shadow: 0 20px 60px -12px rgba(180, 140, 60, 0.12),
               0 0 0 1px rgba(180, 140, 60, 0.08);
 }
+
+/* Placeholder input backgrounds */
+html.light [class*="placeholder-[#4a4439]"]::placeholder { color: #b0a898 !important; }
+
+/* Shadow overrides */
+html.light [class*="shadow-black"] { --tw-shadow-color: rgba(0,0,0,0.08) !important; }
 
 @layer base {
   * {
