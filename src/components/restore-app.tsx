@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback, useRef } from "react";
+import { useState, useCallback, useRef, useEffect } from "react";
 import { useLang } from "@/lib/lang-context";
 import {
   Upload,
@@ -11,6 +11,7 @@ import {
   Sparkles,
   CheckCircle2,
   AlertCircle,
+  Crown,
 } from "lucide-react";
 
 type Stage = "upload" | "processing" | "done" | "error";
@@ -18,6 +19,7 @@ type Stage = "upload" | "processing" | "done" | "error";
 export function RestoreApp() {
   const { t } = useLang();
   const r = t.restore;
+  const cr = t.credits;
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [stage, setStage] = useState<Stage>("upload");
@@ -26,6 +28,20 @@ export function RestoreApp() {
   const [restoredMime, setRestoredMime] = useState<string>("image/png");
   const [dragOver, setDragOver] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [credits, setCredits] = useState<number | null>(null);
+  const [loadingProfile, setLoadingProfile] = useState(true);
+
+  useEffect(() => {
+    fetch("/api/profile")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.credits_remaining !== undefined) {
+          setCredits(data.credits_remaining);
+        }
+      })
+      .catch(() => {})
+      .finally(() => setLoadingProfile(false));
+  }, []);
 
   const handleFile = useCallback(
     async (file: File) => {
@@ -48,6 +64,9 @@ export function RestoreApp() {
         const data = await res.json();
 
         if (!res.ok) {
+          if (data.code === "NO_CREDITS") {
+            setCredits(0);
+          }
           throw new Error(data.error || r.error);
         }
 
@@ -55,6 +74,10 @@ export function RestoreApp() {
         setRestoredMime(mime);
         setRestoredSrc(`data:${mime};base64,${data.image}`);
         setStage("done");
+
+        if (data.creditsRemaining !== undefined) {
+          setCredits(data.creditsRemaining);
+        }
       } catch (err) {
         setErrorMsg(err instanceof Error ? err.message : r.error);
         setStage("error");
@@ -98,6 +121,8 @@ export function RestoreApp() {
     a.click();
   };
 
+  const noCredits = credits !== null && credits <= 0;
+
   return (
     <main className="flex-1 pt-28 pb-20">
       {/* Background glow */}
@@ -118,10 +143,48 @@ export function RestoreApp() {
             {r.title}
           </h1>
           <p className="mt-4 text-lg text-[#8a8279]">{r.subtitle}</p>
+
+          {/* Credit counter */}
+          {!loadingProfile && credits !== null && (
+            <div className="mt-5 inline-flex items-center gap-2 rounded-full border border-[#d4a054]/12 bg-[#161412] px-4 py-2 text-sm">
+              <div
+                className={`size-2 rounded-full ${
+                  credits > 5
+                    ? "bg-emerald-500"
+                    : credits > 0
+                      ? "bg-amber-500"
+                      : "bg-red-500"
+                }`}
+              />
+              <span className="font-semibold text-[#f0ebe4]">{credits}</span>
+              <span className="text-[#8a8279]">{cr.remaining}</span>
+            </div>
+          )}
         </div>
 
+        {/* No credits prompt */}
+        {noCredits && stage === "upload" && (
+          <div className="mx-auto max-w-2xl text-center">
+            <div className="rounded-3xl border border-[#d4a054]/15 bg-[#161412] p-12">
+              <div className="mx-auto mb-6 flex size-20 items-center justify-center rounded-3xl bg-[#d4a054]/10 ring-1 ring-[#d4a054]/20">
+                <Crown className="size-9 text-[#d4a054]" />
+              </div>
+              <h2 className="text-xl font-semibold text-[#f0ebe4]">
+                {cr.noCredits}
+              </h2>
+              <p className="mt-3 text-[#8a8279]">{cr.upgradePrompt}</p>
+              <a href="/pricing" className="mt-8 inline-block">
+                <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] px-8 py-3.5 text-sm font-semibold text-[#0e0d0b] shadow-[0_0_40px_rgba(212,160,84,0.2)] transition-all hover:shadow-[0_0_60px_rgba(212,160,84,0.3)] hover:brightness-110">
+                  <Crown className="size-4" />
+                  {cr.upgrade}
+                </button>
+              </a>
+            </div>
+          </div>
+        )}
+
         {/* Upload stage */}
-        {stage === "upload" && (
+        {stage === "upload" && !noCredits && (
           <div
             onDragOver={(e) => {
               e.preventDefault();
@@ -255,13 +318,22 @@ export function RestoreApp() {
               <p className="text-lg font-semibold text-red-400">
                 {errorMsg || r.error}
               </p>
-              <button
-                onClick={reset}
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] px-8 py-3.5 text-sm font-semibold text-[#0e0d0b] transition-all hover:brightness-110"
-              >
-                <RotateCcw className="size-4" />
-                {r.tryAnother}
-              </button>
+              {noCredits ? (
+                <a href="/pricing">
+                  <button className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] px-8 py-3.5 text-sm font-semibold text-[#0e0d0b] transition-all hover:brightness-110">
+                    <Crown className="size-4" />
+                    {cr.upgrade}
+                  </button>
+                </a>
+              ) : (
+                <button
+                  onClick={reset}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] px-8 py-3.5 text-sm font-semibold text-[#0e0d0b] transition-all hover:brightness-110"
+                >
+                  <RotateCcw className="size-4" />
+                  {r.tryAnother}
+                </button>
+              )}
             </div>
           </div>
         )}

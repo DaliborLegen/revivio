@@ -1,13 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useLang } from "@/lib/lang-context";
-import { Check, Sparkles, ArrowRight } from "lucide-react";
+import { createClient } from "@/lib/supabase";
+import { Check, Sparkles, ArrowRight, Loader2 } from "lucide-react";
+import type { User } from "@supabase/supabase-js";
+
+const PLAN_KEYS = ["free", "starter", "pro", "business"] as const;
 
 export function Pricing() {
   const { t } = useLang();
   const p = t.pricing;
   const [yearly, setYearly] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loadingPlan, setLoadingPlan] = useState<number | null>(null);
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setUser(data.user));
+  }, []);
+
+  const handleCheckout = async (planIndex: number) => {
+    const planKey = PLAN_KEYS[planIndex];
+
+    if (planKey === "free") {
+      window.location.href = user ? "/restore" : "/prijava";
+      return;
+    }
+
+    if (!user) {
+      window.location.href = "/prijava";
+      return;
+    }
+
+    setLoadingPlan(planIndex);
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          plan: planKey,
+          interval: yearly ? "yearly" : "monthly",
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error);
+      }
+
+      if (data.url) {
+        window.location.href = data.url;
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      setLoadingPlan(null);
+    }
+  };
 
   return (
     <section className="relative py-28">
@@ -62,6 +113,7 @@ export function Pricing() {
           {p.plans.map((plan, i) => {
             const isPopular = "popular" in plan && plan.popular;
             const isFree = plan.price === "0";
+            const isLoading = loadingPlan === i;
             const monthlyFromYearly =
               yearly && !isFree
                 ? (parseFloat(plan.priceYearly) / 12).toFixed(2)
@@ -126,22 +178,26 @@ export function Pricing() {
                 </div>
 
                 {/* CTA */}
-                <a href="/restore">
-                  <button
-                    className={`mb-7 w-full rounded-full py-3 text-sm font-semibold transition-all ${
-                      isPopular
-                        ? "bg-gradient-to-r from-[#d4a054] to-[#a67830] text-[#0e0d0b] shadow-lg shadow-[#d4a054]/20 hover:shadow-[#d4a054]/30 hover:brightness-110"
-                        : isFree
-                          ? "border border-[#d4a054]/15 bg-transparent text-[#8a8279] hover:border-[#d4a054]/30 hover:text-[#f0ebe4]"
-                          : "bg-[#f0ebe4] text-[#0e0d0b] hover:bg-[#f0ebe4]/90"
-                    }`}
-                  >
-                    {isFree ? p.startFree : p.choosePlan}
-                    {!isFree && (
-                      <ArrowRight className="ml-1 inline size-4" />
-                    )}
-                  </button>
-                </a>
+                <button
+                  onClick={() => handleCheckout(i)}
+                  disabled={isLoading}
+                  className={`mb-7 flex w-full items-center justify-center gap-2 rounded-full py-3 text-sm font-semibold transition-all disabled:opacity-60 ${
+                    isPopular
+                      ? "bg-gradient-to-r from-[#d4a054] to-[#a67830] text-[#0e0d0b] shadow-lg shadow-[#d4a054]/20 hover:shadow-[#d4a054]/30 hover:brightness-110"
+                      : isFree
+                        ? "border border-[#d4a054]/15 bg-transparent text-[#8a8279] hover:border-[#d4a054]/30 hover:text-[#f0ebe4]"
+                        : "bg-[#f0ebe4] text-[#0e0d0b] hover:bg-[#f0ebe4]/90"
+                  }`}
+                >
+                  {isLoading ? (
+                    <Loader2 className="size-4 animate-spin" />
+                  ) : (
+                    <>
+                      {isFree ? p.startFree : p.choosePlan}
+                      {!isFree && <ArrowRight className="size-4" />}
+                    </>
+                  )}
+                </button>
 
                 {/* Features */}
                 <ul className="flex-1 space-y-3">

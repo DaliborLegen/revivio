@@ -1,5 +1,7 @@
 import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
+import { createServerSupabase } from "@/lib/supabase-server";
+import { supabaseAdmin } from "@/lib/supabase-admin";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -10,6 +12,39 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(
       { error: "GEMINI_API_KEY is not configured" },
       { status: 500 }
+    );
+  }
+
+  // Auth check
+  const supabase = await createServerSupabase();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Credit check
+  const { data: profile } = await supabaseAdmin
+    .from("profiles")
+    .select("credits_remaining")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile) {
+    // Create profile if missing (safety net)
+    await supabaseAdmin.from("profiles").insert({
+      id: user.id,
+      email: user.email,
+      plan: "free",
+      credits_remaining: 3,
+      credits_per_month: 3,
+    });
+  } else if (profile.credits_remaining <= 0) {
+    return NextResponse.json(
+      { error: "No credits remaining", code: "NO_CREDITS" },
+      { status: 403 }
     );
   }
 
@@ -41,7 +76,7 @@ export async function POST(request: NextRequest) {
     const ai = new GoogleGenAI({ apiKey });
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash-preview-04-17",
+      model: "gemini-2.5-flash-image",
       contents: [
         {
           role: "user",
@@ -86,14 +121,36 @@ Return ONLY the restored image, no text.`,
       );
     }
 
+    // Deduct credit and log restoration
+    const currentCredits = profile?.credits_remaining ?? 3;
+
+    await Promise.all([
+      supabaseAdmin
+        .from("profiles")
+        .update({
+          credits_remaining: currentCredits - 1,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id),
+      supabaseAdmin.from("restorations").insert({
+        user_id: user.id,
+        status: "completed",
+        original_size: file.size,
+        mime_type: file.type,
+      }),
+    ]);
+
     return NextResponse.json({
       image: imagePart.inlineData.data,
       mimeType: imagePart.inlineData.mimeType,
+      creditsRemaining: currentCredits - 1,
     });
   } catch (error) {
-    console.error("Restore API error:", error);
+    const message =
+      error instanceof Error ? error.message : "Unknown error";
+    console.error("Restore API error:", message, error);
     return NextResponse.json(
-      { error: "Failed to process image. Please try again." },
+      { error: `Failed to process image: ${message}` },
       { status: 500 }
     );
   }
