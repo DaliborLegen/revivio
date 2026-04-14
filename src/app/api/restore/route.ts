@@ -3,6 +3,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
 import { isBlocked, recordRejection } from "@/lib/rate-limit";
+
+export const maxDuration = 60; // Allow up to 60 seconds for Gemini processing
 import { sendRateLimitAlert } from "@/lib/alert";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
