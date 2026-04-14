@@ -11,10 +11,11 @@ import {
   Sparkles,
   CheckCircle2,
   AlertCircle,
+  AlertTriangle,
   Crown,
 } from "lucide-react";
 
-type Stage = "upload" | "processing" | "done" | "error";
+type Stage = "upload" | "processing" | "done" | "error" | "warning";
 
 export function RestoreApp() {
   const { t } = useLang();
@@ -28,6 +29,8 @@ export function RestoreApp() {
   const [restoredMime, setRestoredMime] = useState<string>("image/png");
   const [dragOver, setDragOver] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
+  const [warningMsg, setWarningMsg] = useState("");
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
   const [credits, setCredits] = useState<number | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
 
@@ -43,18 +46,20 @@ export function RestoreApp() {
       .finally(() => setLoadingProfile(false));
   }, []);
 
-  const handleFile = useCallback(
-    async (file: File) => {
+  const processFile = useCallback(
+    async (file: File, force = false) => {
       const reader = new FileReader();
       reader.onload = () => setOriginalSrc(reader.result as string);
       reader.readAsDataURL(file);
 
       setStage("processing");
       setErrorMsg("");
+      setWarningMsg("");
 
       try {
         const formData = new FormData();
         formData.append("image", file);
+        if (force) formData.append("force", "true");
 
         const res = await fetch("/api/restore", {
           method: "POST",
@@ -66,6 +71,13 @@ export function RestoreApp() {
         if (!res.ok) {
           if (data.code === "NO_CREDITS") {
             setCredits(0);
+            throw new Error(data.error || r.error);
+          }
+          if (data.code === "NOT_OLD_PHOTO") {
+            setWarningMsg(data.error);
+            setPendingFile(file);
+            setStage("warning");
+            return;
           }
           throw new Error(data.error || r.error);
         }
@@ -85,6 +97,15 @@ export function RestoreApp() {
     },
     [r.error]
   );
+
+  const handleFile = useCallback(
+    (file: File) => processFile(file, false),
+    [processFile]
+  );
+
+  const handleForceRestore = useCallback(() => {
+    if (pendingFile) processFile(pendingFile, true);
+  }, [pendingFile, processFile]);
 
   const onDrop = useCallback(
     (e: React.DragEvent) => {
@@ -109,6 +130,8 @@ export function RestoreApp() {
     setOriginalSrc(null);
     setRestoredSrc(null);
     setErrorMsg("");
+    setWarningMsg("");
+    setPendingFile(null);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -295,6 +318,48 @@ export function RestoreApp() {
                 <RotateCcw className="size-4" />
                 {r.tryAnother}
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* Warning stage — photo might not be old */}
+        {stage === "warning" && (
+          <div className="mx-auto max-w-2xl text-center">
+            {originalSrc && (
+              <div className="mb-10 overflow-hidden rounded-2xl border border-amber-500/20">
+                <img
+                  src={originalSrc}
+                  alt="Original"
+                  className="mx-auto max-h-[400px] object-contain"
+                />
+              </div>
+            )}
+            <div className="flex flex-col items-center gap-5">
+              <div className="flex size-20 items-center justify-center rounded-3xl bg-amber-500/10 ring-1 ring-amber-500/20">
+                <AlertTriangle className="size-9 text-amber-400" />
+              </div>
+              <p className="text-lg font-semibold text-amber-400">
+                Opozorilo
+              </p>
+              <p className="max-w-md text-sm text-[#8a8279]">
+                {warningMsg}
+              </p>
+              <div className="flex flex-col items-center gap-3 sm:flex-row">
+                <button
+                  onClick={handleForceRestore}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] px-8 py-3.5 text-sm font-semibold text-[#0e0d0b] transition-all hover:brightness-110"
+                >
+                  <Sparkles className="size-4" />
+                  Vseeno nadaljuj z obnovo
+                </button>
+                <button
+                  onClick={reset}
+                  className="inline-flex items-center gap-2 rounded-full border border-[#d4a054]/15 px-8 py-3.5 text-sm font-medium text-[#8a8279] transition-all hover:border-[#d4a054]/30 hover:text-[#f0ebe4]"
+                >
+                  <RotateCcw className="size-4" />
+                  Izberi drugo fotografijo
+                </button>
+              </div>
             </div>
           </div>
         )}

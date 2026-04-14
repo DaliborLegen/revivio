@@ -74,8 +74,10 @@ export async function POST(request: NextRequest) {
     const base64Image = Buffer.from(arrayBuffer).toString("base64");
 
     const ai = new GoogleGenAI({ apiKey });
+    const force = formData.get("force") === "true";
 
-    // Step 1: Analyze if the photo is old/damaged and needs restoration
+    // Step 1: Analyze if the photo is old/damaged (skip if forced)
+    if (!force) {
     const analysis = await ai.models.generateContent({
       model: "gemini-2.5-flash",
       contents: [
@@ -134,6 +136,7 @@ When in doubt, ALWAYS return false. Only block obviously modern digital photos.`
     } catch {
       // If analysis fails, proceed with restoration anyway
     }
+    } // end if (!force)
 
     // Step 2: Restore the photo
     const response = await ai.models.generateContent({
