@@ -19,12 +19,26 @@ export async function GET() {
   const totalUsers = profilesRes.count || 0;
   const totalRestorations = restorationsRes.count || 0;
   const activeSubscribers = subscribersRes.count || 0;
-  const estimatedCost = totalRestorations * 0.05 + totalRestorations * 0.001; // restoration + analysis
+  const totalCost = totalRestorations * 0.051;
+
+  // This month's restorations
+  const firstOfMonth = new Date();
+  firstOfMonth.setDate(1);
+  firstOfMonth.setHours(0, 0, 0, 0);
+
+  const { count: monthlyRestorations } = await supabaseAdmin
+    .from("restorations")
+    .select("id", { count: "exact", head: true })
+    .gte("created_at", firstOfMonth.toISOString());
+
+  const monthlyCost = (monthlyRestorations || 0) * 0.051;
 
   return NextResponse.json({
     totalUsers,
     totalRestorations,
     activeSubscribers,
-    estimatedCost: estimatedCost.toFixed(2),
+    estimatedCost: totalCost.toFixed(2),
+    monthlyRestorations: monthlyRestorations || 0,
+    monthlyCost: monthlyCost.toFixed(2),
   });
 }

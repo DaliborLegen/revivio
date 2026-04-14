@@ -10,9 +10,9 @@ export async function GET() {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { data, error } = await supabaseAdmin
+  const { data: profiles, error } = await supabaseAdmin
     .from("profiles")
-    .select("email, plan, credits_remaining, credits_per_month, subscription_status, created_at")
+    .select("id, email, plan, credits_remaining, credits_per_month, subscription_status, created_at")
     .order("created_at", { ascending: false })
     .limit(100);
 
@@ -20,5 +20,28 @@ export async function GET() {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  return NextResponse.json(data || []);
+  // Get restoration counts per user
+  const { data: restorations } = await supabaseAdmin
+    .from("restorations")
+    .select("user_id");
+
+  const countMap: Record<string, number> = {};
+  if (restorations) {
+    for (const r of restorations) {
+      countMap[r.user_id] = (countMap[r.user_id] || 0) + 1;
+    }
+  }
+
+  const data = (profiles || []).map((p) => ({
+    email: p.email,
+    plan: p.plan,
+    credits_remaining: p.credits_remaining,
+    credits_per_month: p.credits_per_month,
+    subscription_status: p.subscription_status,
+    created_at: p.created_at,
+    total_restorations: countMap[p.id] || 0,
+    estimated_cost: ((countMap[p.id] || 0) * 0.051).toFixed(2),
+  }));
+
+  return NextResponse.json(data);
 }

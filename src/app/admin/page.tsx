@@ -14,6 +14,8 @@ type Stats = {
   totalRestorations: number;
   activeSubscribers: number;
   estimatedCost: string;
+  monthlyRestorations: number;
+  monthlyCost: string;
 };
 
 type UserRow = {
@@ -23,6 +25,8 @@ type UserRow = {
   credits_per_month: number;
   subscription_status: string | null;
   created_at: string;
+  total_restorations: number;
+  estimated_cost: string;
 };
 
 type RestorationRow = {
@@ -106,17 +110,21 @@ function AdminDashboardContent() {
   const t = {
     title: lang === "sl" ? "Admin nadzorna plosca" : "Admin Dashboard",
     totalUsers: lang === "sl" ? "Skupaj uporabnikov" : "Total Users",
-    totalRestorations: lang === "sl" ? "Skupaj restavracij" : "Total Restorations",
-    activeSubscribers: lang === "sl" ? "Aktivni narocniki" : "Active Subscribers",
-    estimatedCost: lang === "sl" ? "Ocenjeni stroski" : "Estimated Cost",
+    totalRestorations: lang === "sl" ? "Skupaj obnov" : "Total Restorations",
+    activeSubscribers: lang === "sl" ? "Aktivni naročniki" : "Active Subscribers",
+    estimatedCost: lang === "sl" ? "Skupni stroški" : "Total Cost",
+    monthlyRestorations: lang === "sl" ? "Obnove ta mesec" : "This Month",
+    monthlyCost: lang === "sl" ? "Stroški ta mesec" : "Monthly Cost",
     usersTitle: lang === "sl" ? "Uporabniki" : "Users",
-    restorationsTitle: lang === "sl" ? "Nedavne restavracije" : "Recent Restorations",
+    restorationsTitle: lang === "sl" ? "Nedavne obnove" : "Recent Restorations",
     email: "Email",
     plan: lang === "sl" ? "Paket" : "Plan",
     creditsRemaining: lang === "sl" ? "Krediti" : "Credits",
     creditsPerMonth: lang === "sl" ? "Krediti/mesec" : "Credits/mo",
+    restorations: lang === "sl" ? "Obnove" : "Restorations",
+    userCost: lang === "sl" ? "Strošek" : "Cost",
     status: "Status",
-    joined: lang === "sl" ? "Pridruzitev" : "Joined",
+    joined: lang === "sl" ? "Pridružitev" : "Joined",
     date: lang === "sl" ? "Datum" : "Date",
     fileSize: lang === "sl" ? "Velikost" : "File Size",
     userEmail: lang === "sl" ? "Uporabnik" : "User",
@@ -136,16 +144,11 @@ function AdminDashboardContent() {
         </div>
 
         {/* Overview cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
           <StatCard
             icon={<Users className="w-5 h-5 text-[#d4a054]" />}
             label={t.totalUsers}
             value={stats?.totalUsers ?? 0}
-          />
-          <StatCard
-            icon={<ImageIcon className="w-5 h-5 text-[#d4a054]" />}
-            label={t.totalRestorations}
-            value={stats?.totalRestorations ?? 0}
           />
           <StatCard
             icon={<Crown className="w-5 h-5 text-[#d4a054]" />}
@@ -153,9 +156,28 @@ function AdminDashboardContent() {
             value={stats?.activeSubscribers ?? 0}
           />
           <StatCard
-            icon={<DollarSign className="w-5 h-5 text-[#d4a054]" />}
+            icon={<ImageIcon className="w-5 h-5 text-[#d4a054]" />}
+            label={t.totalRestorations}
+            value={stats?.totalRestorations ?? 0}
+          />
+        </div>
+
+        {/* Cost cards */}
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
+          <StatCard
+            icon={<ImageIcon className="w-5 h-5 text-emerald-400" />}
+            label={t.monthlyRestorations}
+            value={stats?.monthlyRestorations ?? 0}
+          />
+          <StatCard
+            icon={<DollarSign className="w-5 h-5 text-amber-400" />}
+            label={t.monthlyCost}
+            value={`€${stats?.monthlyCost ?? "0.00"}`}
+          />
+          <StatCard
+            icon={<DollarSign className="w-5 h-5 text-red-400" />}
             label={t.estimatedCost}
-            value={`\u20AC${stats?.estimatedCost ?? "0.00"}`}
+            value={`€${stats?.estimatedCost ?? "0.00"}`}
           />
         </div>
 
@@ -173,6 +195,8 @@ function AdminDashboardContent() {
                     <th className="text-left px-4 py-3 text-[#8a8279] font-medium">{t.plan}</th>
                     <th className="text-left px-4 py-3 text-[#8a8279] font-medium">{t.creditsRemaining}</th>
                     <th className="text-left px-4 py-3 text-[#8a8279] font-medium">{t.creditsPerMonth}</th>
+                    <th className="text-left px-4 py-3 text-[#8a8279] font-medium">{t.restorations}</th>
+                    <th className="text-left px-4 py-3 text-[#8a8279] font-medium">{t.userCost}</th>
                     <th className="text-left px-4 py-3 text-[#8a8279] font-medium">{t.status}</th>
                     <th className="text-left px-4 py-3 text-[#8a8279] font-medium">{t.joined}</th>
                   </tr>
@@ -195,6 +219,8 @@ function AdminDashboardContent() {
                       </td>
                       <td className="px-4 py-3 text-[#f0ebe4]">{u.credits_remaining}</td>
                       <td className="px-4 py-3 text-[#8a8279]">{u.credits_per_month}</td>
+                      <td className="px-4 py-3 text-[#f0ebe4] font-medium">{u.total_restorations}</td>
+                      <td className="px-4 py-3 text-amber-400 font-medium">€{u.estimated_cost}</td>
                       <td className="px-4 py-3">
                         <span
                           className={`text-xs font-medium ${
