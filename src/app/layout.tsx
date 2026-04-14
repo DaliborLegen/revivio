@@ -42,7 +42,7 @@ export default function RootLayout({
   return (
     <html
       lang="sl"
-      className={`${outfit.variable} ${cormorant.variable} h-full antialiased`}
+      className={`${outfit.variable} ${cormorant.variable} h-full antialiased light`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>

@@ -19,7 +19,7 @@ const LangContext = createContext<LangContextType | null>(null);
 
 export function LangProvider({ children }: { children: React.ReactNode }) {
   const [lang, setLang] = useState<Lang>("sl");
-  const [theme, setTheme] = useState<Theme>("dark");
+  const [theme, setTheme] = useState<Theme>("light");
   const toggleLang = useCallback(() => setLang((l) => (l === "sl" ? "en" : "sl")), []);
   const t = translations[lang];
 
