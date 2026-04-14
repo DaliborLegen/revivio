@@ -2,6 +2,7 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { checkRateLimit } from "@/lib/rate-limit";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -15,6 +16,20 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // IP rate limit (catches unauthenticated spam too)
+  const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
+  const ipLimit = checkRateLimit(`ip:${ip}`);
+  if (!ipLimit.allowed) {
+    const minutes = Math.ceil((ipLimit.retryAfterSeconds || 900) / 60);
+    return NextResponse.json(
+      {
+        error: `Preveč zahtev iz tega naslova. Poskusite znova čez ${minutes} minut.`,
+        code: "RATE_LIMITED",
+      },
+      { status: 429 }
+    );
+  }
+
   // Auth check
   const supabase = await createServerSupabase();
   const {
@@ -23,6 +38,19 @@ export async function POST(request: NextRequest) {
 
   if (!user) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Rate limit check
+  const rateLimit = checkRateLimit(user.id);
+  if (!rateLimit.allowed) {
+    const minutes = Math.ceil((rateLimit.retryAfterSeconds || 900) / 60);
+    return NextResponse.json(
+      {
+        error: `Preveč zahtev v kratkem času. Poskusite znova čez ${minutes} minut.`,
+        code: "RATE_LIMITED",
+      },
+      { status: 429 }
+    );
   }
 
   // Credit check
