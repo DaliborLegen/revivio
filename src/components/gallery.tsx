@@ -12,20 +12,20 @@ export function Gallery() {
   const cards =
     lang === "sl"
       ? [
-          { title: "Barvanje", desc: "Črno-bele fotografije pretvorjene v barvne" },
-          { title: "Odstranjevanje prask", desc: "Praske in poškodbe odstranjene v trenutku" },
-          { title: "HD izboljšava", desc: "Zbledele fotografije obnovljene v polni ločljivosti" },
+          { title: "Barvanje", desc: "Stare črno-bele fotografije oživljene z naravnimi barvami" },
+          { title: "Restavracija detajlov", desc: "Podrobnosti lokomotiv in strojev obnovljene do zadnjega vijaka" },
+          { title: "HD izboljšava", desc: "Zbledele fotografije stavb obnovljene v polni ločljivosti" },
         ]
       : [
-          { title: "Colorization", desc: "Black-and-white photos brought to vivid color" },
-          { title: "Scratch Removal", desc: "Scratches and damage removed instantly" },
-          { title: "HD Enhancement", desc: "Faded photos restored to full resolution" },
+          { title: "Colorization", desc: "Old black-and-white photos brought to life with natural colors" },
+          { title: "Detail Restoration", desc: "Locomotive and machinery details restored to the last bolt" },
+          { title: "HD Enhancement", desc: "Faded building photos restored to full resolution" },
         ];
 
   const beforeAfters = [
     { before: "/examples/old1.jpg", after: "/examples/restored1.jpg" },
-    { before: "/examples/old2.jpg", after: "/examples/restored2.jpg" },
     { before: "/examples/old3.jpg", after: "/examples/restored3.jpg" },
+    { before: "/examples/old4.jpg", after: "/examples/restored4.jpg" },
   ];
 
   const sectionTitle = lang === "sl" ? "Primeri restavracij" : "Restoration examples";

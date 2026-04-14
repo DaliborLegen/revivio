@@ -105,12 +105,12 @@ export function Hero() {
               <BeforeAfterSlider
                 beforeSvg={
                   <div className="absolute inset-0">
-                    <img src="/examples/old1.jpg" alt="Before" className="h-full w-full object-cover" />
+                    <img src="/examples/old2.jpg" alt="Before" className="h-full w-full object-cover" />
                   </div>
                 }
                 afterSvg={
                   <div className="absolute inset-0">
-                    <img src="/examples/restored1.jpg" alt="After" className="h-full w-full object-cover" />
+                    <img src="/examples/restored2.jpg" alt="After" className="h-full w-full object-cover" />
                   </div>
                 }
                 beforeLabel="Original"
