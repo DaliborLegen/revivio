@@ -89,27 +89,27 @@ export async function POST(request: NextRequest) {
               },
             },
             {
-              text: `Analyze this image and determine if it is an old, vintage, damaged, faded, or black-and-white photograph that would benefit from AI restoration/colorization.
+              text: `Analyze this image. Is it a CLEARLY MODERN photo that has absolutely NO connection to old/vintage photography?
 
-Answer with ONLY a JSON object in this exact format:
-{"isOld": true/false, "reason": "brief explanation in Slovenian"}
+Answer with ONLY a JSON object: {"isModern": true/false, "reason": "brief explanation in Slovenian"}
 
-Examples of photos that ARE suitable (isOld: true):
-- Black and white photographs
-- Sepia-toned photos
-- Faded or yellowed photos
-- Photos with scratches, tears, or damage
-- Vintage photos from before ~1990
-- Scanned old prints
+Return isModern: true ONLY for these cases:
+- A modern smartphone selfie taken recently
+- A screenshot of a website, app, or game
+- Digital artwork, memes, or illustrations
+- A photo clearly taken with a modern camera in recent years (sharp, high-res, modern subjects like smartphones, modern cars, etc.)
 
-Examples of photos that are NOT suitable (isOld: false):
-- Modern digital photos
-- Screenshots
-- Digital artwork
-- Recent color photographs
-- Memes or internet images
+Return isModern: false (meaning: allow restoration) for ALL of these:
+- Any black and white photograph
+- Any sepia or yellowed photograph
+- Any photo with scratches, tears, damage, or fading
+- Any photo that LOOKS like it could be from before 2000
+- Any photo of old subjects (vintage clothing, old buildings, old cars, historical scenes)
+- Any photo that has already been colorized or partially restored
+- Any scanned print or film photograph
+- ANY photo where you are unsure — default to false
 
-Be generous — if there's any chance the photo could benefit from restoration, say true.`,
+When in doubt, ALWAYS return false. Only block obviously modern digital photos.`,
             },
           ],
         },
@@ -121,7 +121,7 @@ Be generous — if there's any chance the photo could benefit from restoration, 
       const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
       if (jsonMatch) {
         const result = JSON.parse(jsonMatch[0]);
-        if (result.isOld === false) {
+        if (result.isModern === true) {
           return NextResponse.json(
             {
               error: result.reason || "Ta fotografija ne izgleda kot stara ali poškodovana. Naložite staro fotografijo za obnovo.",
