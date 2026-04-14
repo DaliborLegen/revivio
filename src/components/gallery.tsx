@@ -13,12 +13,12 @@ export function Gallery() {
     lang === "sl"
       ? [
           { title: "Barvanje", desc: "Stare črno-bele fotografije oživljene z naravnimi barvami" },
-          { title: "Restavracija detajlov", desc: "Podrobnosti lokomotiv in strojev obnovljene do zadnjega vijaka" },
+          { title: "Barvanje portretov", desc: "Družinske fotografije oživljene z naravnimi barvami oblačil in kože" },
           { title: "HD izboljšava", desc: "Zbledele fotografije stavb obnovljene v polni ločljivosti" },
         ]
       : [
           { title: "Colorization", desc: "Old black-and-white photos brought to life with natural colors" },
-          { title: "Detail Restoration", desc: "Locomotive and machinery details restored to the last bolt" },
+          { title: "Portrait Colorization", desc: "Family photos brought to life with natural skin tones and clothing colors" },
           { title: "HD Enhancement", desc: "Faded building photos restored to full resolution" },
         ];
 
