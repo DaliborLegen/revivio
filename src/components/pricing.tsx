@@ -9,7 +9,7 @@ import type { User } from "@supabase/supabase-js";
 const PLAN_KEYS = ["free", "starter", "pro", "business"] as const;
 
 export function Pricing() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const p = t.pricing;
   const [user, setUser] = useState<User | null>(null);
   const [loadingPlan, setLoadingPlan] = useState<number | null>(null);
@@ -164,6 +164,38 @@ export function Pricing() {
               </div>
             );
           })}
+        </div>
+
+        {/* Payment methods */}
+        <div className="mt-16 text-center">
+          <p className="mb-4 text-xs font-medium uppercase tracking-[0.15em] text-[#8a8279]">
+            {lang === "sl" ? "Varno plačilo z" : "Secure payment with"}
+          </p>
+          <div className="flex items-center justify-center gap-6 opacity-60">
+            {/* Visa */}
+            <svg viewBox="0 0 48 32" className="h-8 w-auto" fill="none">
+              <rect width="48" height="32" rx="4" fill="currentColor" className="text-[#1a1f71]" />
+              <path d="M19.5 21h-3l1.9-11.5h3L19.5 21zm8.1-11.5l-2.8 7.9-.3-1.6-1-5.1s-.1-1.2-1.5-1.2h-4.7l-.1.3s1.6.3 3.4 1.4l2.8 10.8h3.1l4.7-12.5h-3.6zm14.9 11.5h2.7l-2.4-11.5h-2.4c-1.1 0-1.4.6-1.4.6l-4.4 10.9h3.1l.6-1.7h3.8l.4 1.7zm-3.3-4l1.6-4.3.9 4.3h-2.5zM31.3 12.1l.4-2.5s-1.3-.5-2.7-.5c-1.5 0-5 .7-5 3.5 0 2.6 3.6 2.7 3.6 4 0 1.4-3.2 1.1-4.3.3l-.4 2.6s1.4.6 3.4.6c2.1 0 5.2-1.1 5.2-3.7 0-2.7-3.6-2.9-3.6-4 0-1.2 2.5-1 3.4-.3z" fill="white" />
+            </svg>
+            {/* Mastercard */}
+            <svg viewBox="0 0 48 32" className="h-8 w-auto" fill="none">
+              <rect width="48" height="32" rx="4" fill="#252525" />
+              <circle cx="19" cy="16" r="8" fill="#EB001B" />
+              <circle cx="29" cy="16" r="8" fill="#F79E1B" />
+              <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00" />
+            </svg>
+            {/* Apple Pay */}
+            <div className="flex h-8 items-center rounded bg-[#8a8279]/20 px-3">
+              <span className="text-xs font-semibold text-[#8a8279]">Apple Pay</span>
+            </div>
+            {/* Google Pay */}
+            <div className="flex h-8 items-center rounded bg-[#8a8279]/20 px-3">
+              <span className="text-xs font-semibold text-[#8a8279]">Google Pay</span>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-[#8a8279]/60">
+            {lang === "sl" ? "Vsa plačila so šifrirana in varna prek Stripe" : "All payments are encrypted and secured by Stripe"}
+          </p>
         </div>
       </div>
     </section>
