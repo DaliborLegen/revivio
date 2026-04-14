@@ -70,7 +70,10 @@ function DashboardContent() {
         ]);
 
         if (profileRes.ok) setProfile(await profileRes.json());
-        if (restorationsRes.ok) setRestorations(await restorationsRes.json());
+        if (restorationsRes.ok) {
+          const restData = await restorationsRes.json();
+          if (Array.isArray(restData)) setRestorations(restData);
+        }
       } catch (err) {
         console.error("Dashboard load error:", err);
       } finally {

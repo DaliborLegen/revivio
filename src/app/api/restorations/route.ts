@@ -10,24 +10,35 @@ export async function GET() {
   if (!user)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Try with URL columns first, fallback to basic columns
-  let { data, error } = await supabaseAdmin
+  // Query basic columns (always available)
+  const { data: basicData } = await supabaseAdmin
     .from("restorations")
-    .select("id, status, original_url, restored_url, created_at")
+    .select("id, status, created_at, original_size, mime_type")
     .eq("user_id", user.id)
     .order("created_at", { ascending: false })
     .limit(50);
 
-  if (error) {
-    // Columns might not exist yet — fallback
-    const result = await supabaseAdmin
+  // Try to get URL columns separately
+  let urlMap: Record<string, { original_url: string | null; restored_url: string | null }> = {};
+  try {
+    const { data: urlData } = await supabaseAdmin
       .from("restorations")
-      .select("id, status, created_at")
-      .eq("user_id", user.id)
-      .order("created_at", { ascending: false })
-      .limit(50);
-    data = (result.data || []).map((r) => ({ ...r, original_url: null, restored_url: null }));
+      .select("id, original_url, restored_url")
+      .eq("user_id", user.id);
+    if (urlData) {
+      for (const r of urlData) {
+        urlMap[r.id] = { original_url: r.original_url, restored_url: r.restored_url };
+      }
+    }
+  } catch {
+    // URL columns don't exist yet — ignore
   }
 
-  return NextResponse.json(data || []);
+  const data = (basicData || []).map((r) => ({
+    ...r,
+    original_url: urlMap[r.id]?.original_url || null,
+    restored_url: urlMap[r.id]?.restored_url || null,
+  }));
+
+  return NextResponse.json(data);
 }
