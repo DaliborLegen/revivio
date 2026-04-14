@@ -57,9 +57,10 @@ function DashboardContent() {
 
         setEmail(user.email ?? "");
         setMemberSince(
-          new Date(user.created_at).toLocaleDateString(undefined, {
+          new Date(user.created_at).toLocaleDateString("sl-SI", {
             year: "numeric",
             month: "long",
+            day: "numeric",
           })
         );
 
