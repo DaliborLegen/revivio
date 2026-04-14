@@ -8,6 +8,7 @@ import { Features } from "@/components/features";
 import { Gallery } from "@/components/gallery";
 import { HowItWorks } from "@/components/how-it-works";
 import { Testimonials } from "@/components/testimonials";
+import { Pricing } from "@/components/pricing";
 import { CtaSection } from "@/components/cta-section";
 import { Footer } from "@/components/footer";
 
@@ -21,6 +22,9 @@ export default function Home() {
       <Features />
       <HowItWorks />
       <Testimonials />
+      <div id="pricing">
+        <Pricing />
+      </div>
       <CtaSection />
       <Footer />
     </LangProvider>

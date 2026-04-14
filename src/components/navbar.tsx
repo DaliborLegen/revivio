@@ -61,7 +61,7 @@ export function Navbar() {
             { href: "/#features", label: t.nav.features },
             { href: "/#how-it-works", label: t.nav.howItWorks },
             { href: "/#testimonials", label: t.nav.testimonials },
-            { href: "/pricing", label: t.footer.pricing },
+            { href: "/#pricing", label: t.footer.pricing },
           ].map((link) => (
             <a
               key={link.href}
@@ -157,7 +157,7 @@ export function Navbar() {
               { href: "/#features", label: t.nav.features },
               { href: "/#how-it-works", label: t.nav.howItWorks },
               { href: "/#testimonials", label: t.nav.testimonials },
-              { href: "/pricing", label: t.footer.pricing },
+              { href: "/#pricing", label: t.footer.pricing },
             ].map((link) => (
               <a
                 key={link.href}
