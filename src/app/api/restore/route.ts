@@ -123,8 +123,34 @@ Return ONLY the restored image, no text.`,
       );
     }
 
-    // Deduct credit and log restoration
+    // Deduct credit, save images, and log restoration
     const currentCredits = profile?.credits_remaining ?? 1;
+    const restorationId = crypto.randomUUID();
+    const ext = file.type.includes("png") ? "png" : file.type.includes("webp") ? "webp" : "jpg";
+    const restoredExt = imagePart.inlineData.mimeType?.includes("png") ? "png" : "jpg";
+
+    // Upload original and restored images to Supabase Storage
+    const originalPath = `${user.id}/${restorationId}/original.${ext}`;
+    const restoredPath = `${user.id}/${restorationId}/restored.${restoredExt}`;
+
+    const restoredBuffer = Buffer.from(imagePart.inlineData.data, "base64");
+
+    await Promise.all([
+      supabaseAdmin.storage
+        .from("restorations")
+        .upload(originalPath, Buffer.from(arrayBuffer), {
+          contentType: file.type,
+        }),
+      supabaseAdmin.storage
+        .from("restorations")
+        .upload(restoredPath, restoredBuffer, {
+          contentType: imagePart.inlineData.mimeType || "image/png",
+        }),
+    ]);
+
+    const baseUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/restorations`;
+    const originalUrl = `${baseUrl}/${originalPath}`;
+    const restoredUrl = `${baseUrl}/${restoredPath}`;
 
     await Promise.all([
       supabaseAdmin
@@ -135,10 +161,13 @@ Return ONLY the restored image, no text.`,
         })
         .eq("id", user.id),
       supabaseAdmin.from("restorations").insert({
+        id: restorationId,
         user_id: user.id,
         status: "completed",
         original_size: file.size,
         mime_type: file.type,
+        original_url: originalUrl,
+        restored_url: restoredUrl,
       }),
     ]);
 

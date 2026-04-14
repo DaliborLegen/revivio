@@ -84,6 +84,12 @@ export function Navbar() {
 
           {user ? (
             <>
+              <a
+                href="/profil"
+                className="flex items-center gap-1.5 rounded-full border border-[#d4a054]/15 px-3 py-1.5 text-xs font-medium text-[#8a8279] transition-all hover:border-[#d4a054]/30 hover:text-[#d4a054]"
+              >
+                <User className="size-3.5" />
+              </a>
               <a href="/restore">
                 <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] px-5 py-2 text-sm font-semibold text-[#0e0d0b] shadow-lg shadow-[#d4a054]/20 transition-all hover:shadow-[#d4a054]/30 hover:brightness-110 active:scale-[0.97]">
                   <span className="relative z-10">{t.nav.tryNow}</span>
@@ -153,10 +159,14 @@ export function Navbar() {
             <div className="my-2 h-px bg-[#d4a054]/10" />
             {user ? (
               <>
-                <div className="flex items-center gap-2 px-4 py-2 text-sm text-[#8a8279]">
+                <a
+                  href="/profil"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-[#8a8279] transition-colors hover:bg-[#1c1a17] hover:text-[#f0ebe4]"
+                >
                   <User className="size-4" />
                   {user.email}
-                </div>
+                </a>
                 <a href="/restore" onClick={() => setMobileOpen(false)}>
                   <button className="w-full rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] py-3 text-sm font-semibold text-[#0e0d0b]">
                     {t.nav.tryNow}
