@@ -87,12 +87,11 @@ function DashboardContent() {
     );
   }
 
-  const creditsUsed = profile
-    ? profile.credits_per_month - profile.credits_remaining
-    : 0;
-  const creditsTotal = profile?.credits_per_month ?? 0;
+  const creditsRemaining = profile?.credits_remaining ?? 0;
+  const creditsTotal = Math.max(profile?.credits_per_month ?? 1, creditsRemaining);
+  const creditsUsed = Math.max(0, creditsTotal - creditsRemaining);
   const creditsPercent =
-    creditsTotal > 0 ? Math.round((creditsUsed / creditsTotal) * 100) : 0;
+    creditsTotal > 0 ? Math.min(100, Math.round((creditsUsed / creditsTotal) * 100)) : 0;
 
   const planLabel = profile?.plan
     ? profile.plan.charAt(0).toUpperCase() + profile.plan.slice(1)
@@ -168,15 +167,15 @@ function DashboardContent() {
 
             <div className="space-y-2">
               <div className="flex justify-between text-sm">
-                <span className="text-[#8a8279]">
-                  {creditsUsed} / {creditsTotal}
+                <span className="text-[#f0ebe4] font-semibold text-lg">
+                  {creditsRemaining}
                 </span>
-                <span className="text-[#8a8279]">{creditsPercent}%</span>
+                <span className="text-[#8a8279]">{creditsUsed} porabljenih od {creditsTotal}</span>
               </div>
               <div className="w-full h-2.5 bg-[#1e1c19] rounded-full overflow-hidden">
                 <div
                   className="h-full bg-[#d4a054] rounded-full transition-all duration-500"
-                  style={{ width: `${creditsPercent}%` }}
+                  style={{ width: `${100 - creditsPercent}%` }}
                 />
               </div>
               <p className="text-[#8a8279] text-xs">
