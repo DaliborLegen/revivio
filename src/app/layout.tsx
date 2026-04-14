@@ -15,18 +15,18 @@ const cormorant = Cormorant_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "Revivio — AI restavracija fotografij",
+  title: "Revivio — AI obnova fotografij",
   description:
     "Oživite stare, poškodovane in zbledele fotografije s pomočjo umetne inteligence. Barvanje, HD izboljšava, odstranjevanje prask in več.",
   keywords: [
-    "restavracija fotografij",
+    "obnova fotografij",
     "AI",
     "stare fotografije",
     "barvanje",
     "photo restoration",
   ],
   openGraph: {
-    title: "Revivio — AI restavracija fotografij",
+    title: "Revivio — AI obnova fotografij",
     description: "Oživite stare spomine s pomočjo umetne inteligence.",
     url: "https://revivio.si",
     siteName: "Revivio",

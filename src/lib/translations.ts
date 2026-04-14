@@ -9,11 +9,11 @@ export const translations = {
       tryNow: "Preizkusi zdaj",
     },
     hero: {
-      badge: "AI restavracija fotografij",
+      badge: "AI obnova fotografij",
       title: "Oživite svoje\nstare spomine",
       subtitle:
         "Revivio s pomočjo umetne inteligence obnavlja poškodovane, zbledele in črno-bele fotografije v nekaj sekundah.",
-      cta: "Restavriraj fotografijo",
+      cta: "Obnovi fotografijo",
       ctaSecondary: "Poglej kako deluje",
     },
     stats: {
@@ -26,10 +26,10 @@ export const translations = {
     },
     features: {
       title: "Vse kar potrebujete",
-      subtitle: "Napredne AI funkcije za popolno restavracijo vaših dragocenih fotografij.",
+      subtitle: "Napredne AI funkcije za popolno obnovo vaših dragocenih fotografij.",
       items: [
         {
-          title: "AI restavracija",
+          title: "AI obnova",
           description: "Popravite strgane, zbledele in poškodovane fotografije z enim klikom.",
         },
         {
@@ -99,7 +99,7 @@ export const translations = {
     cta: {
       title: "Pripraveljeni oživiti spomine?",
       subtitle: "Začnite brezplačno — brez registracije, brez skritih stroškov.",
-      button: "Restavriraj fotografijo zdaj",
+      button: "Obnovi fotografijo zdaj",
     },
     pricing: {
       title: "Cenik",
@@ -116,7 +116,7 @@ export const translations = {
           price: "0",
           credits: "1",
           features: [
-            "1 restavracija na mesec",
+            "1 obnova na mesec",
             "Z vodnim žigom",
             "Standardna kakovost",
             "JPG izvoz",
@@ -127,7 +127,7 @@ export const translations = {
           price: "4.99",
           credits: "5",
           features: [
-            "5 restavracij na mesec",
+            "5 obnov na mesec",
             "Brez vodnega žiga",
             "HD kakovost",
             "JPG + PNG izvoz",
@@ -140,7 +140,7 @@ export const translations = {
           credits: "30",
           popular: true,
           features: [
-            "30 restavracij na mesec",
+            "30 obnov na mesec",
             "Brez vodnega žiga",
             "Najvišja kakovost",
             "Vsi formati izvoza",
@@ -154,7 +154,7 @@ export const translations = {
           price: "24.99",
           credits: "100",
           features: [
-            "100 restavracij na mesec",
+            "100 obnov na mesec",
             "Brez vodnega žiga",
             "Najvišja kakovost",
             "Vsi formati izvoza",
@@ -165,14 +165,14 @@ export const translations = {
       ],
     },
     restore: {
-      title: "Restavriraj fotografijo",
+      title: "Obnovi fotografijo",
       subtitle: "Naložite staro ali poškodovano fotografijo in pustite AI, da jo obnovi.",
       dropzone: "Povlecite fotografijo sem ali kliknite za izbiro",
       dropzoneFormats: "JPG, PNG ali WebP — do 10 MB",
       uploading: "Nalaganje...",
       processing: "AI obdeluje vašo fotografijo...",
       processingSubtitle: "To lahko traja do 30 sekund",
-      done: "Restavracija končana!",
+      done: "Obnova končana!",
       download: "Prenesi obnovljeno fotografijo",
       tryAnother: "Preizkusi drugo fotografijo",
       original: "Original",
@@ -199,14 +199,14 @@ export const translations = {
       logout: "Odjava",
       welcome: "Dobrodošli nazaj",
       welcomeNew: "Ustvarite račun",
-      subtitle: "Prijavite se za dostop do AI restavracije fotografij.",
+      subtitle: "Prijavite se za dostop do AI obnove fotografij.",
       subtitleNew: "Začnite obnavljati svoje stare spomine.",
       checkEmail: "Preverite svoj e-poštni nabiralnik za potrditveno povezavo.",
     },
     checkout: {
       successTitle: "Plačilo uspešno!",
-      successSubtitle: "Vaša naročnina je aktivirana. Zdaj lahko začnete z restavriranjem fotografij.",
-      successButton: "Začni restavrirati",
+      successSubtitle: "Vaša naročnina je aktivirana. Zdaj lahko začnete z obnavljanjem fotografij.",
+      successButton: "Začni obnavljati",
       cancelTitle: "Plačilo preklicano",
       cancelSubtitle: "Vaše plačilo je bilo preklicano. Lahko poskusite znova kadarkoli.",
       cancelButton: "Nazaj na cenik",
@@ -215,17 +215,17 @@ export const translations = {
       remaining: "preostalih kreditov",
       noCredits: "Ni več kreditov",
       upgrade: "Nadgradi paket",
-      upgradePrompt: "Nadgradite svoj paket za več restavracij.",
+      upgradePrompt: "Nadgradite svoj paket za več obnov.",
     },
     dashboard: {
       title: "Moj profil",
       subtitle: "Upravljajte svoj račun in preglejte zgodovino",
       plan: "Paket",
       creditsUsed: "Porabljeni krediti",
-      history: "Zgodovina restavracij",
-      noHistory: "Še nimate restavracij",
-      noHistorySubtitle: "Naložite prvo fotografijo za restavracijo",
-      startRestoring: "Začni restavrirati",
+      history: "Zgodovina obnov",
+      noHistory: "Še nimate obnov",
+      noHistorySubtitle: "Naložite prvo fotografijo za obnovo",
+      startRestoring: "Začni obnavljati",
       memberSince: "Član od",
       subscription: "Naročnina",
       active: "Aktivna",
@@ -234,7 +234,7 @@ export const translations = {
       viewAll: "Poglej vse",
     },
     footer: {
-      description: "AI restavracija fotografij za ohranjanje vaših najdragocenejših spominov.",
+      description: "AI obnova fotografij za ohranjanje vaših najdragocenejših spominov.",
       product: "Produkt",
       company: "Podjetje",
       legal: "Pravno",
