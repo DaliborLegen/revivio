@@ -33,6 +33,7 @@ export async function GET() {
   }
 
   const data = (profiles || []).map((p) => ({
+    id: p.id,
     email: p.email,
     plan: p.plan,
     credits_remaining: p.credits_remaining,
@@ -44,4 +45,40 @@ export async function GET() {
   }));
 
   return NextResponse.json(data);
+}
+
+export async function PATCH(request: Request) {
+  const supabase = await createServerSupabase();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user || user.email !== "dalibor.legen@gmail.com") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const body = await request.json();
+  const { userId, plan, credits_remaining, credits_per_month } = body;
+
+  if (!userId) {
+    return NextResponse.json({ error: "userId required" }, { status: 400 });
+  }
+
+  const updates: Record<string, unknown> = {};
+  if (plan !== undefined) updates.plan = plan;
+  if (credits_remaining !== undefined) updates.credits_remaining = credits_remaining;
+  if (credits_per_month !== undefined) updates.credits_per_month = credits_per_month;
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: "No updates provided" }, { status: 400 });
+  }
+
+  const { error } = await supabaseAdmin
+    .from("profiles")
+    .update(updates)
+    .eq("id", userId);
+
+  if (error) {
+    return NextResponse.json({ error: error.message }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true });
 }
