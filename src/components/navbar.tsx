@@ -58,9 +58,9 @@ export function Navbar() {
         {/* Desktop nav */}
         <div className="hidden items-center gap-1 md:flex">
           {[
-            { href: "#features", label: t.nav.features },
-            { href: "#how-it-works", label: t.nav.howItWorks },
-            { href: "#testimonials", label: t.nav.testimonials },
+            { href: "/#features", label: t.nav.features },
+            { href: "/#how-it-works", label: t.nav.howItWorks },
+            { href: "/#testimonials", label: t.nav.testimonials },
             { href: "/pricing", label: t.footer.pricing },
           ].map((link) => (
             <a
@@ -154,9 +154,9 @@ export function Navbar() {
         <div className="border-t border-[#d4a054]/10 bg-[#0e0d0b]/95 px-6 py-6 backdrop-blur-2xl md:hidden">
           <div className="flex flex-col gap-1">
             {[
-              { href: "#features", label: t.nav.features },
-              { href: "#how-it-works", label: t.nav.howItWorks },
-              { href: "#testimonials", label: t.nav.testimonials },
+              { href: "/#features", label: t.nav.features },
+              { href: "/#how-it-works", label: t.nav.howItWorks },
+              { href: "/#testimonials", label: t.nav.testimonials },
               { href: "/pricing", label: t.footer.pricing },
             ].map((link) => (
               <a
