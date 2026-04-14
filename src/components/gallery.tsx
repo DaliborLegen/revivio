@@ -28,10 +28,10 @@ export function Gallery() {
     { before: "/examples/old4.jpg", after: "/examples/restored4.jpg" },
   ];
 
-  const sectionTitle = lang === "sl" ? "Primeri restavracij" : "Restoration examples";
+  const sectionTitle = lang === "sl" ? "Primeri obnov" : "Restoration examples";
   const sectionSubtitle =
     lang === "sl"
-      ? "Poglejte kako Revivio AI preoblikuje vaše fotografije."
+      ? "Poglejte kako Revivio AI obnovi vaše fotografije."
       : "See how Revivio AI transforms your photographs.";
 
   return (
