@@ -2,14 +2,6 @@
 
 import { useLang } from "@/lib/lang-context";
 import { Palette, Eraser, ScanEye } from "lucide-react";
-import {
-  ColorBefore,
-  ColorAfter,
-  ScratchBefore,
-  ScratchAfter,
-  EnhanceBefore,
-  EnhanceAfter,
-} from "./sample-images";
 import { BeforeAfterSlider } from "./before-after-slider";
 
 const icons = [Palette, Eraser, ScanEye];
@@ -31,9 +23,9 @@ export function Gallery() {
         ];
 
   const beforeAfters = [
-    { before: <ColorBefore />, after: <ColorAfter /> },
-    { before: <ScratchBefore />, after: <ScratchAfter /> },
-    { before: <EnhanceBefore />, after: <EnhanceAfter /> },
+    { before: "/examples/old1.jpg", after: "/examples/restored1.jpg" },
+    { before: "/examples/old2.jpg", after: "/examples/restored2.jpg" },
+    { before: "/examples/old3.jpg", after: "/examples/restored3.jpg" },
   ];
 
   const sectionTitle = lang === "sl" ? "Primeri restavracij" : "Restoration examples";
@@ -74,10 +66,14 @@ export function Gallery() {
                 {/* Before/After slider */}
                 <BeforeAfterSlider
                   beforeSvg={
-                    <div className="absolute inset-0 bg-[#1c1a17]">{ba.before}</div>
+                    <div className="absolute inset-0 bg-[#1c1a17]">
+                      <img src={ba.before} alt="Before" className="h-full w-full object-cover" />
+                    </div>
                   }
                   afterSvg={
-                    <div className="absolute inset-0 bg-[#141210]">{ba.after}</div>
+                    <div className="absolute inset-0 bg-[#141210]">
+                      <img src={ba.after} alt="After" className="h-full w-full object-cover" />
+                    </div>
                   }
                   beforeLabel="Before"
                   afterLabel="After"

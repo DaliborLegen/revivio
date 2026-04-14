@@ -3,7 +3,6 @@
 import { useLang } from "@/lib/lang-context";
 import { ArrowRight, Play, Sparkles, Image, Zap, Shield } from "lucide-react";
 import { BeforeAfterSlider } from "./before-after-slider";
-import { HeroBeforeSvg, HeroAfterSvg } from "./sample-images";
 
 export function Hero() {
   const { t } = useLang();
@@ -106,12 +105,12 @@ export function Hero() {
               <BeforeAfterSlider
                 beforeSvg={
                   <div className="absolute inset-0">
-                    <HeroBeforeSvg />
+                    <img src="/examples/old1.jpg" alt="Before" className="h-full w-full object-cover" />
                   </div>
                 }
                 afterSvg={
                   <div className="absolute inset-0">
-                    <HeroAfterSvg />
+                    <img src="/examples/restored1.jpg" alt="After" className="h-full w-full object-cover" />
                   </div>
                 }
                 beforeLabel="Original"
