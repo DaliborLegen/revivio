@@ -75,6 +75,67 @@ export async function POST(request: NextRequest) {
 
     const ai = new GoogleGenAI({ apiKey });
 
+    // Step 1: Analyze if the photo is old/damaged and needs restoration
+    const analysis = await ai.models.generateContent({
+      model: "gemini-2.5-flash",
+      contents: [
+        {
+          role: "user",
+          parts: [
+            {
+              inlineData: {
+                data: base64Image,
+                mimeType: file.type,
+              },
+            },
+            {
+              text: `Analyze this image and determine if it is an old, vintage, damaged, faded, or black-and-white photograph that would benefit from AI restoration/colorization.
+
+Answer with ONLY a JSON object in this exact format:
+{"isOld": true/false, "reason": "brief explanation in Slovenian"}
+
+Examples of photos that ARE suitable (isOld: true):
+- Black and white photographs
+- Sepia-toned photos
+- Faded or yellowed photos
+- Photos with scratches, tears, or damage
+- Vintage photos from before ~1990
+- Scanned old prints
+
+Examples of photos that are NOT suitable (isOld: false):
+- Modern digital photos
+- Screenshots
+- Digital artwork
+- Recent color photographs
+- Memes or internet images
+
+Be generous — if there's any chance the photo could benefit from restoration, say true.`,
+            },
+          ],
+        },
+      ],
+    });
+
+    const analysisText = analysis.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    try {
+      const jsonMatch = analysisText.match(/\{[\s\S]*\}/);
+      if (jsonMatch) {
+        const result = JSON.parse(jsonMatch[0]);
+        if (result.isOld === false) {
+          return NextResponse.json(
+            {
+              error: result.reason || "Ta fotografija ne izgleda kot stara ali poškodovana. Naložite staro fotografijo za obnovo.",
+              code: "NOT_OLD_PHOTO",
+            },
+            { status: 400 }
+          );
+        }
+      }
+    } catch {
+      // If analysis fails, proceed with restoration anyway
+    }
+
+    // Step 2: Restore the photo
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-image",
       contents: [
