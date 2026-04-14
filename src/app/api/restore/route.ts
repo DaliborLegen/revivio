@@ -38,8 +38,8 @@ export async function POST(request: NextRequest) {
       id: user.id,
       email: user.email,
       plan: "free",
-      credits_remaining: 3,
-      credits_per_month: 3,
+      credits_remaining: 1,
+      credits_per_month: 1,
     });
   } else if (profile.credits_remaining <= 0) {
     return NextResponse.json(
@@ -122,7 +122,7 @@ Return ONLY the restored image, no text.`,
     }
 
     // Deduct credit and log restoration
-    const currentCredits = profile?.credits_remaining ?? 3;
+    const currentCredits = profile?.credits_remaining ?? 1;
 
     await Promise.all([
       supabaseAdmin

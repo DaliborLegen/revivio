@@ -6,19 +6,16 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_place
 
 export const PLANS = {
   starter: {
-    monthly: "price_STARTER_MONTHLY_PLACEHOLDER",
-    yearly: "price_STARTER_YEARLY_PLACEHOLDER",
-    credits: 30,
+    monthly: "price_1TM4lZIS3TAeIJFvKs7X33Xm",
+    credits: 5,
   },
   pro: {
-    monthly: "price_PRO_MONTHLY_PLACEHOLDER",
-    yearly: "price_PRO_YEARLY_PLACEHOLDER",
-    credits: 100,
+    monthly: "price_1TM4maIS3TAeIJFvrd7dzbvo",
+    credits: 30,
   },
   business: {
-    monthly: "price_BUSINESS_MONTHLY_PLACEHOLDER",
-    yearly: "price_BUSINESS_YEARLY_PLACEHOLDER",
-    credits: 500,
+    monthly: "price_1TM4nKIS3TAeIJFv3vnuDwLl",
+    credits: 100,
   },
 } as const;
 

@@ -11,7 +11,6 @@ const PLAN_KEYS = ["free", "starter", "pro", "business"] as const;
 export function Pricing() {
   const { t } = useLang();
   const p = t.pricing;
-  const [yearly, setYearly] = useState(false);
   const [user, setUser] = useState<User | null>(null);
   const [loadingPlan, setLoadingPlan] = useState<number | null>(null);
 
@@ -41,7 +40,6 @@ export function Pricing() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           plan: planKey,
-          interval: yearly ? "yearly" : "monthly",
         }),
       });
 
@@ -80,32 +78,6 @@ export function Pricing() {
           </h1>
           <p className="mt-4 text-lg text-[#8a8279]">{p.subtitle}</p>
 
-          {/* Toggle */}
-          <div className="mt-10 inline-flex items-center gap-1 rounded-full border border-[#d4a054]/12 bg-[#161412] p-1">
-            <button
-              onClick={() => setYearly(false)}
-              className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all ${
-                !yearly
-                  ? "bg-[#d4a054] text-[#0e0d0b] shadow-lg shadow-[#d4a054]/20"
-                  : "text-[#8a8279] hover:text-[#c4bdb4]"
-              }`}
-            >
-              {p.monthly}
-            </button>
-            <button
-              onClick={() => setYearly(true)}
-              className={`flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-medium transition-all ${
-                yearly
-                  ? "bg-[#d4a054] text-[#0e0d0b] shadow-lg shadow-[#d4a054]/20"
-                  : "text-[#8a8279] hover:text-[#c4bdb4]"
-              }`}
-            >
-              {p.yearly}
-              <span className="rounded-full bg-emerald-500/15 px-2 py-0.5 text-xs font-semibold text-emerald-400">
-                {p.yearlyDiscount}
-              </span>
-            </button>
-          </div>
         </div>
 
         {/* Plans grid */}
@@ -114,10 +86,6 @@ export function Pricing() {
             const isPopular = "popular" in plan && plan.popular;
             const isFree = plan.price === "0";
             const isLoading = loadingPlan === i;
-            const monthlyFromYearly =
-              yearly && !isFree
-                ? (parseFloat(plan.priceYearly) / 12).toFixed(2)
-                : null;
 
             return (
               <div
@@ -148,33 +116,14 @@ export function Pricing() {
 
                 {/* Price */}
                 <div className="mt-5 mb-7">
-                  {isFree ? (
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-display text-5xl font-bold text-[#f0ebe4]">
-                        €0
-                      </span>
-                    </div>
-                  ) : yearly ? (
-                    <div>
-                      <div className="flex items-baseline gap-1">
-                        <span className="font-display text-5xl font-bold text-[#f0ebe4]">
-                          €{monthlyFromYearly}
-                        </span>
-                        <span className="text-sm text-[#8a8279]">{p.perMonth}</span>
-                      </div>
-                      <p className="mt-1 text-sm text-[#6a6259]">
-                        €{plan.priceYearly}
-                        {p.perYear}
-                      </p>
-                    </div>
-                  ) : (
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-display text-5xl font-bold text-[#f0ebe4]">
-                        €{plan.price}
-                      </span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="font-display text-5xl font-bold text-[#f0ebe4]">
+                      €{plan.price}
+                    </span>
+                    {!isFree && (
                       <span className="text-sm text-[#8a8279]">{p.perMonth}</span>
-                    </div>
-                  )}
+                    )}
+                  </div>
                 </div>
 
                 {/* CTA */}

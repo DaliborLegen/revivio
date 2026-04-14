@@ -14,17 +14,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { plan, interval } = (await request.json()) as {
+    const { plan } = (await request.json()) as {
       plan: string;
-      interval: "monthly" | "yearly";
     };
 
-    if (!plan || !interval || !(plan in PLANS)) {
+    if (!plan || !(plan in PLANS)) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
 
     const planKey = plan as PlanKey;
-    const priceId = PLANS[planKey][interval];
+    const priceId = PLANS[planKey].monthly;
 
     // Get or create Stripe customer
     const { data: profile } = await supabaseAdmin

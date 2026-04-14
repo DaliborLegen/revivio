@@ -138,8 +138,8 @@ export async function POST(request: NextRequest) {
           .from("profiles")
           .update({
             plan: "free",
-            credits_remaining: 3,
-            credits_per_month: 3,
+            credits_remaining: 1,
+            credits_per_month: 1,
             stripe_subscription_id: null,
             subscription_status: "canceled",
             current_period_end: null,
