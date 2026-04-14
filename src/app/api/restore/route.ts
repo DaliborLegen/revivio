@@ -2,7 +2,8 @@ import { GoogleGenAI } from "@google/genai";
 import { NextRequest, NextResponse } from "next/server";
 import { createServerSupabase } from "@/lib/supabase-server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
-import { checkRateLimit } from "@/lib/rate-limit";
+import { isBlocked, recordRejection } from "@/lib/rate-limit";
+import { sendRateLimitAlert } from "@/lib/alert";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
@@ -16,19 +17,8 @@ export async function POST(request: NextRequest) {
     );
   }
 
-  // IP rate limit (catches unauthenticated spam too)
+  // Check if blocked from too many rejected uploads
   const ip = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
-  const ipLimit = checkRateLimit(`ip:${ip}`);
-  if (!ipLimit.allowed) {
-    const minutes = Math.ceil((ipLimit.retryAfterSeconds || 900) / 60);
-    return NextResponse.json(
-      {
-        error: `Preveč zahtev iz tega naslova. Poskusite znova čez ${minutes} minut.`,
-        code: "RATE_LIMITED",
-      },
-      { status: 429 }
-    );
-  }
 
   // Auth check
   const supabase = await createServerSupabase();
@@ -40,13 +30,13 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Rate limit check
-  const rateLimit = checkRateLimit(user.id);
-  if (!rateLimit.allowed) {
-    const minutes = Math.ceil((rateLimit.retryAfterSeconds || 900) / 60);
+  // Check if user is blocked from too many rejected uploads
+  const userBlock = isBlocked(user.id);
+  if (userBlock.blocked) {
+    const minutes = Math.ceil((userBlock.retryAfterSeconds || 1800) / 60);
     return NextResponse.json(
       {
-        error: `Preveč zahtev v kratkem času. Poskusite znova čez ${minutes} minut.`,
+        error: `Preveč zavrnjenih nalaganj. Poskusite znova čez ${minutes} minut.`,
         code: "RATE_LIMITED",
       },
       { status: 429 }
@@ -152,6 +142,15 @@ When in doubt, ALWAYS return false. Only block obviously modern digital photos.`
       if (jsonMatch) {
         const result = JSON.parse(jsonMatch[0]);
         if (result.isModern === true) {
+          // Record rejection and check if should block
+          const rejection = recordRejection(user.id);
+          if (rejection.shouldBlock) {
+            sendRateLimitAlert(user.id, ip, `user:${user.id}`).catch(() => {});
+          }
+          const ipRejection = recordRejection(`ip:${ip}`);
+          if (ipRejection.shouldBlock) {
+            sendRateLimitAlert(user.id, ip, `ip:${ip}`).catch(() => {});
+          }
           return NextResponse.json(
             {
               error: result.reason || "Ta fotografija ne izgleda kot stara ali poškodovana. Naložite staro fotografijo za obnovo.",
@@ -283,8 +282,19 @@ Return ONLY the fully colorized and restored image, no text.`,
     const message =
       error instanceof Error ? error.message : "Unknown error";
     console.error("Restore API error:", message, error);
+
+    // User-friendly error messages
+    let userMessage = "Prišlo je do napake pri obdelavi slike. Poskusite znova.";
+    if (message.includes("503") || message.includes("UNAVAILABLE") || message.includes("Deadline")) {
+      userMessage = "Strežnik je trenutno preobremenjen. Počakajte nekaj sekund in poskusite znova.";
+    } else if (message.includes("429") || message.includes("RESOURCE_EXHAUSTED")) {
+      userMessage = "Preveč zahtev. Počakajte minuto in poskusite znova.";
+    } else if (message.includes("400") || message.includes("INVALID")) {
+      userMessage = "Slika ni primerna za obdelavo. Poskusite z drugo fotografijo.";
+    }
+
     return NextResponse.json(
-      { error: `Failed to process image: ${message}` },
+      { error: userMessage },
       { status: 500 }
     );
   }
