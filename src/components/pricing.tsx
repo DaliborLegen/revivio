@@ -13,6 +13,7 @@ export function Pricing() {
   const p = t.pricing;
   const [user, setUser] = useState<User | null>(null);
   const [loadingPlan, setLoadingPlan] = useState<number | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const supabase = createClient();
@@ -33,6 +34,7 @@ export function Pricing() {
     }
 
     setLoadingPlan(planIndex);
+    setError(null);
 
     try {
       const res = await fetch("/api/checkout", {
@@ -46,14 +48,21 @@ export function Pricing() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error);
+        throw new Error(data.error || `Napaka ${res.status}`);
       }
 
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        throw new Error("Ni URL za plačilo");
       }
-    } catch (error) {
-      console.error("Checkout error:", error);
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setError(
+        lang === "sl"
+          ? "Napaka pri ustvarjanju plačila. Poskusite znova."
+          : "Payment error. Please try again."
+      );
       setLoadingPlan(null);
     }
   };
@@ -79,6 +88,13 @@ export function Pricing() {
           <p className="mt-4 text-lg text-[#8a8279]">{p.subtitle}</p>
 
         </div>
+
+        {/* Error message */}
+        {error && (
+          <div className="mb-6 mx-auto max-w-md rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-center text-sm text-red-400">
+            {error}
+          </div>
+        )}
 
         {/* Plans grid */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
