@@ -1,7 +1,7 @@
 "use client";
 
 import { useLang } from "@/lib/lang-context";
-import { Camera } from "lucide-react";
+import { Camera, Mail } from "lucide-react";
 
 export function Footer() {
   const { t } = useLang();
@@ -23,6 +23,13 @@ export function Footer() {
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-[#6a6259]">
               {t.footer.description}
             </p>
+            <a
+              href="mailto:info@revivio.si"
+              className="mt-4 inline-flex items-center gap-2 text-sm text-[#8a8279] transition-colors hover:text-[#d4a054]"
+            >
+              <Mail className="size-4" />
+              info@revivio.si
+            </a>
           </div>
 
           {/* Product */}
@@ -56,7 +63,7 @@ export function Footer() {
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#6a6259] transition-colors hover:text-[#f0ebe4]">
+                <a href="mailto:info@revivio.si" className="text-sm text-[#6a6259] transition-colors hover:text-[#f0ebe4]">
                   {t.footer.contact}
                 </a>
               </li>
