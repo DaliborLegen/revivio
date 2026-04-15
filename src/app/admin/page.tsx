@@ -20,10 +20,6 @@ import {
   Lock,
   Mail,
   Loader2,
-  UserPlus,
-  Trash2,
-  KeyRound,
-  Settings,
 } from "lucide-react";
 
 type Stats = {
@@ -74,11 +70,6 @@ type RestorationRow = {
   status: string;
   original_size: number | null;
   mime_type: string | null;
-  created_at: string;
-};
-
-type AdminUser = {
-  email: string;
   created_at: string;
 };
 
@@ -206,14 +197,6 @@ function AdminDashboard({ adminEmail }: { adminEmail: string }) {
   const [refreshing, setRefreshing] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  // Admin management
-  const [adminUsers, setAdminUsers] = useState<AdminUser[]>([]);
-  const [showAdminSettings, setShowAdminSettings] = useState(false);
-  const [newAdminEmail, setNewAdminEmail] = useState("");
-  const [newAdminPassword, setNewAdminPassword] = useState("");
-  const [changePassEmail, setChangePassEmail] = useState("");
-  const [changePassValue, setChangePassValue] = useState("");
-  const [adminMsg, setAdminMsg] = useState("");
 
   const loadData = async () => {
     try {
@@ -236,14 +219,8 @@ function AdminDashboard({ adminEmail }: { adminEmail: string }) {
     }
   };
 
-  const loadAdmins = async () => {
-    const res = await fetch("/api/admin/admins");
-    if (res.ok) setAdminUsers(await res.json());
-  };
-
   useEffect(() => {
     loadData().then(() => setLoading(false));
-    loadAdmins();
   }, []);
 
   const handleRefresh = async () => {
@@ -281,58 +258,6 @@ function AdminDashboard({ adminEmail }: { adminEmail: string }) {
     }
   };
 
-  const addAdmin = async () => {
-    if (!newAdminEmail || !newAdminPassword) return;
-    setAdminMsg("");
-    const res = await fetch("/api/admin/admins", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: newAdminEmail, password: newAdminPassword }),
-    });
-    if (res.ok) {
-      setNewAdminEmail("");
-      setNewAdminPassword("");
-      setAdminMsg("Admin dodan");
-      loadAdmins();
-    } else {
-      const data = await res.json();
-      setAdminMsg(data.error || "Napaka");
-    }
-  };
-
-  const changePassword = async () => {
-    if (!changePassEmail || !changePassValue) return;
-    setAdminMsg("");
-    const res = await fetch("/api/admin/admins", {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: changePassEmail, password: changePassValue }),
-    });
-    if (res.ok) {
-      setChangePassValue("");
-      setAdminMsg("Geslo spremenjeno");
-    } else {
-      const data = await res.json();
-      setAdminMsg(data.error || "Napaka");
-    }
-  };
-
-  const deleteAdmin = async (email: string) => {
-    setAdminMsg("");
-    const res = await fetch("/api/admin/admins", {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
-    });
-    if (res.ok) {
-      setAdminMsg("Admin odstranjen");
-      loadAdmins();
-    } else {
-      const data = await res.json();
-      setAdminMsg(data.error || "Napaka");
-    }
-  };
-
   const filteredUsers = searchQuery
     ? users.filter((u) =>
         u.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -364,16 +289,6 @@ function AdminDashboard({ adminEmail }: { adminEmail: string }) {
           </div>
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setShowAdminSettings(!showAdminSettings)}
-              className={`flex items-center gap-2 rounded-full border px-4 py-2 text-sm transition-all ${
-                showAdminSettings
-                  ? "border-[#d4a054]/30 text-[#d4a054] bg-[#d4a054]/5"
-                  : "border-[#d4a054]/15 text-[#8a8279] hover:border-[#d4a054]/30 hover:text-[#d4a054]"
-              }`}
-            >
-              <Settings className="w-4 h-4" />
-            </button>
-            <button
               onClick={handleRefresh}
               disabled={refreshing}
               className="flex items-center gap-2 rounded-full border border-[#d4a054]/15 px-4 py-2 text-sm text-[#8a8279] transition-all hover:border-[#d4a054]/30 hover:text-[#d4a054] disabled:opacity-50"
@@ -388,103 +303,6 @@ function AdminDashboard({ adminEmail }: { adminEmail: string }) {
             </button>
           </div>
         </div>
-
-        {/* Admin settings panel */}
-        {showAdminSettings && (
-          <div className="bg-[#161412] border border-[#d4a054]/10 rounded-2xl p-6 space-y-6">
-            <h2 className="font-display text-xl font-semibold text-[#f0ebe4] flex items-center gap-2">
-              <KeyRound className="w-5 h-5 text-[#d4a054]" />
-              Admin uporabniki
-            </h2>
-
-            {/* Current admins */}
-            <div className="space-y-2">
-              {adminUsers.map((a) => (
-                <div key={a.email} className="flex items-center justify-between rounded-xl border border-[#d4a054]/8 bg-[#0e0d0b] px-4 py-3">
-                  <div>
-                    <span className="text-sm text-[#f0ebe4]">{a.email}</span>
-                    <span className="ml-2 text-xs text-[#8a8279]">
-                      {new Date(a.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                  {a.email !== adminEmail && (
-                    <button
-                      onClick={() => deleteAdmin(a.email)}
-                      className="p-1.5 rounded-lg text-red-400 hover:bg-red-500/10 transition-colors"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Add admin */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-medium text-[#8a8279]">Dodaj admina</h3>
-              <div className="flex gap-2">
-                <input
-                  type="email"
-                  placeholder="Email"
-                  value={newAdminEmail}
-                  onChange={(e) => setNewAdminEmail(e.target.value)}
-                  className="flex-1 rounded-xl border border-[#d4a054]/10 bg-[#0e0d0b] py-2.5 px-4 text-sm text-[#f0ebe4] placeholder-[#4a4439] outline-none focus:border-[#d4a054]/30"
-                />
-                <input
-                  type="text"
-                  placeholder="Geslo"
-                  value={newAdminPassword}
-                  onChange={(e) => setNewAdminPassword(e.target.value)}
-                  className="w-36 rounded-xl border border-[#d4a054]/10 bg-[#0e0d0b] py-2.5 px-4 text-sm text-[#f0ebe4] placeholder-[#4a4439] outline-none focus:border-[#d4a054]/30"
-                />
-                <button
-                  onClick={addAdmin}
-                  className="flex items-center gap-1.5 rounded-xl bg-[#d4a054] px-4 py-2.5 text-sm font-semibold text-[#0e0d0b] hover:brightness-110 transition-all"
-                >
-                  <UserPlus className="w-4 h-4" />
-                  Dodaj
-                </button>
-              </div>
-            </div>
-
-            {/* Change password */}
-            <div className="space-y-3">
-              <h3 className="text-sm font-medium text-[#8a8279]">Spremeni geslo</h3>
-              <div className="flex gap-2">
-                <select
-                  value={changePassEmail}
-                  onChange={(e) => setChangePassEmail(e.target.value)}
-                  className="flex-1 rounded-xl border border-[#d4a054]/10 bg-[#0e0d0b] py-2.5 px-4 text-sm text-[#f0ebe4] outline-none focus:border-[#d4a054]/30"
-                >
-                  <option value="">Izberi admina</option>
-                  {adminUsers.map((a) => (
-                    <option key={a.email} value={a.email}>{a.email}</option>
-                  ))}
-                </select>
-                <input
-                  type="text"
-                  placeholder="Novo geslo"
-                  value={changePassValue}
-                  onChange={(e) => setChangePassValue(e.target.value)}
-                  className="w-36 rounded-xl border border-[#d4a054]/10 bg-[#0e0d0b] py-2.5 px-4 text-sm text-[#f0ebe4] placeholder-[#4a4439] outline-none focus:border-[#d4a054]/30"
-                />
-                <button
-                  onClick={changePassword}
-                  className="flex items-center gap-1.5 rounded-xl border border-[#d4a054]/15 px-4 py-2.5 text-sm font-medium text-[#8a8279] hover:text-[#d4a054] hover:border-[#d4a054]/30 transition-all"
-                >
-                  <KeyRound className="w-4 h-4" />
-                  Spremeni
-                </button>
-              </div>
-            </div>
-
-            {adminMsg && (
-              <p className={`text-sm ${adminMsg.includes("Napaka") || adminMsg.includes("mores") ? "text-red-400" : "text-emerald-400"}`}>
-                {adminMsg}
-              </p>
-            )}
-          </div>
-        )}
 
         {/* Overview cards */}
         <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
