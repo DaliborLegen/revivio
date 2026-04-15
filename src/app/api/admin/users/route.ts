@@ -1,12 +1,10 @@
 import { NextResponse } from "next/server";
-import { createServerSupabase } from "@/lib/supabase-server";
 import { supabaseAdmin } from "@/lib/supabase-admin";
+import { verifyAdmin } from "@/lib/admin-auth";
 
 export async function GET() {
-  const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || user.email !== "dalibor.legen@gmail.com") {
+  const admin = await verifyAdmin();
+  if (!admin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -48,10 +46,8 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
-  const supabase = await createServerSupabase();
-  const { data: { user } } = await supabase.auth.getUser();
-
-  if (!user || user.email !== "dalibor.legen@gmail.com") {
+  const admin = await verifyAdmin();
+  if (!admin) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

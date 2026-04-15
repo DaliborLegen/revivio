@@ -56,3 +56,18 @@ $$ language plpgsql security definer;
 create trigger on_auth_user_created
   after insert on auth.users
   for each row execute function public.handle_new_user();
+
+-- 4. Admin users table
+create table public.admin_users (
+  email text primary key,
+  password_hash text not null,
+  created_at timestamptz not null default now()
+);
+
+-- 5. Admin sessions table
+create table public.admin_sessions (
+  token text primary key,
+  email text not null references public.admin_users(email) on delete cascade,
+  expires_at timestamptz not null,
+  created_at timestamptz not null default now()
+);

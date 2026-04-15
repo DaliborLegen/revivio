@@ -2,7 +2,7 @@
 
 import { useLang } from "@/lib/lang-context";
 import { createClient } from "@/lib/supabase";
-import { Camera, Globe, Menu, X, LogOut, User, Sun, Moon, Shield } from "lucide-react";
+import { Camera, Globe, Menu, X, LogOut, User, Sun, Moon } from "lucide-react";
 import { useState, useEffect } from "react";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
@@ -11,7 +11,6 @@ export function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [user, setUser] = useState<SupaUser | null>(null);
-  const isAdmin = user?.email === "dalibor.legen@gmail.com";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -97,14 +96,6 @@ export function Navbar() {
               >
                 <User className="size-3.5" />
               </a>
-              {isAdmin && (
-                <a
-                  href="/admin"
-                  className="flex items-center gap-1.5 rounded-full border border-[#d4a054]/15 px-3 py-1.5 text-xs font-medium text-[#d4a054] transition-all hover:border-[#d4a054]/30 hover:bg-[#d4a054]/10"
-                >
-                  <Shield className="size-3.5" />
-                </a>
-              )}
               <a href="/restore">
                 <button className="relative overflow-hidden rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] px-5 py-2 text-sm font-semibold text-[#0e0d0b] shadow-lg shadow-[#d4a054]/20 transition-all hover:shadow-[#d4a054]/30 hover:brightness-110 active:scale-[0.97]">
                   <span className="relative z-10">{t.nav.tryNow}</span>
@@ -188,16 +179,6 @@ export function Navbar() {
                   <User className="size-4" />
                   {user.email}
                 </a>
-                {isAdmin && (
-                  <a
-                    href="/admin"
-                    onClick={() => setMobileOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-4 py-3 text-sm text-[#d4a054] transition-colors hover:bg-[#d4a054]/5"
-                  >
-                    <Shield className="size-4" />
-                    Admin
-                  </a>
-                )}
                 <a href="/restore" onClick={() => setMobileOpen(false)}>
                   <button className="w-full rounded-full bg-gradient-to-r from-[#d4a054] to-[#a67830] py-3 text-sm font-semibold text-[#0e0d0b]">
                     {t.nav.tryNow}
