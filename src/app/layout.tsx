@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Cormorant_Garamond } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -44,15 +45,16 @@ export default function RootLayout({
       lang="sl"
       className={`${outfit.variable} ${cormorant.variable} h-full antialiased light`}
     >
-      <head>
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HHV4P88VM5" />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-HHV4P88VM5');`,
-          }}
+      <body className="min-h-full flex flex-col">
+        <Script
+          src="https://www.googletagmanager.com/gtag/js?id=G-HHV4P88VM5"
+          strategy="afterInteractive"
         />
-      </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+        <Script id="gtag-init" strategy="afterInteractive">
+          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-HHV4P88VM5');`}
+        </Script>
+        {children}
+      </body>
     </html>
   );
 }
