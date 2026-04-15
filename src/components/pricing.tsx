@@ -171,26 +171,37 @@ export function Pricing() {
           <p className="mb-4 text-xs font-medium uppercase tracking-[0.15em] text-[#8a8279]">
             {lang === "sl" ? "Varno plačilo z" : "Secure payment with"}
           </p>
-          <div className="flex items-center justify-center gap-6 opacity-60">
+          <div className="flex items-center justify-center gap-3">
             {/* Visa */}
-            <svg viewBox="0 0 48 32" className="h-8 w-auto" fill="none">
-              <rect width="48" height="32" rx="4" fill="currentColor" className="text-[#1a1f71]" />
-              <path d="M19.5 21h-3l1.9-11.5h3L19.5 21zm8.1-11.5l-2.8 7.9-.3-1.6-1-5.1s-.1-1.2-1.5-1.2h-4.7l-.1.3s1.6.3 3.4 1.4l2.8 10.8h3.1l4.7-12.5h-3.6zm14.9 11.5h2.7l-2.4-11.5h-2.4c-1.1 0-1.4.6-1.4.6l-4.4 10.9h3.1l.6-1.7h3.8l.4 1.7zm-3.3-4l1.6-4.3.9 4.3h-2.5zM31.3 12.1l.4-2.5s-1.3-.5-2.7-.5c-1.5 0-5 .7-5 3.5 0 2.6 3.6 2.7 3.6 4 0 1.4-3.2 1.1-4.3.3l-.4 2.6s1.4.6 3.4.6c2.1 0 5.2-1.1 5.2-3.7 0-2.7-3.6-2.9-3.6-4 0-1.2 2.5-1 3.4-.3z" fill="white" />
-            </svg>
+            <div className="flex h-10 w-16 items-center justify-center rounded-lg border border-[#d4a054]/15 bg-white">
+              <svg viewBox="0 0 780 500" className="h-5 w-auto">
+                <path d="M293.2 348.7l33.4-195.8h53.4l-33.4 195.8h-53.4zm246.8-191c-10.6-4-27.2-8.3-47.9-8.3-52.8 0-90 26.6-90.2 64.7-.3 28.2 26.5 43.9 46.8 53.3 20.8 9.6 27.8 15.8 27.7 24.4-.1 13.2-16.6 19.2-32 19.2-21.4 0-32.7-3-50.3-10.2l-6.9-3.1-7.5 43.8c12.5 5.5 35.6 10.2 59.6 10.5 56.2 0 92.6-26.3 93-66.8.2-22.3-14-39.2-44.6-53.2-18.6-9.1-29.9-15.1-29.8-24.3 0-8.1 9.6-16.8 30.4-16.8 17.4-.3 29.9 3.5 39.7 7.5l4.8 2.2 7.2-42.8zm137.8-4.8h-41.3c-12.8 0-22.4 3.5-28 16.3l-79.4 179.8h56.2s9.2-24.2 11.3-29.5h68.6c1.6 6.9 6.5 29.5 6.5 29.5h49.7l-43.6-196.1zm-65.8 126.5c4.4-11.3 21.4-54.8 21.4-54.8-.3.5 4.4-11.4 7.1-18.8l3.6 17s10.3 47 12.4 56.6h-44.5zM327.1 152.9L274 348.7h-53.5l-33-156c-2-7.6-3.7-10.4-9.8-13.6-9.9-5.2-26.3-10.1-40.7-13.2l1-4.9h85.6c11.6 0 21.5 7.4 23.7 19.9l21.2 106.3 52.3-126.3h56.3z" fill="#1a1f71"/>
+              </svg>
+            </div>
             {/* Mastercard */}
-            <svg viewBox="0 0 48 32" className="h-8 w-auto" fill="none">
-              <rect width="48" height="32" rx="4" fill="#252525" />
-              <circle cx="19" cy="16" r="8" fill="#EB001B" />
-              <circle cx="29" cy="16" r="8" fill="#F79E1B" />
-              <path d="M24 9.8a8 8 0 0 1 0 12.4 8 8 0 0 1 0-12.4z" fill="#FF5F00" />
-            </svg>
+            <div className="flex h-10 w-16 items-center justify-center rounded-lg border border-[#d4a054]/15 bg-white">
+              <svg viewBox="0 0 48 32" className="h-6 w-auto">
+                <circle cx="17" cy="16" r="9" fill="#EB001B"/>
+                <circle cx="31" cy="16" r="9" fill="#F79E1B"/>
+                <path d="M24 8.6a9 9 0 0 1 0 14.8 9 9 0 0 1 0-14.8z" fill="#FF5F00"/>
+              </svg>
+            </div>
             {/* Apple Pay */}
-            <div className="flex h-8 items-center rounded bg-[#8a8279]/20 px-3">
-              <span className="text-xs font-semibold text-[#8a8279]">Apple Pay</span>
+            <div className="flex h-10 items-center gap-1 rounded-lg border border-[#d4a054]/15 bg-white px-3">
+              <svg viewBox="0 0 17 20" className="h-4 w-auto">
+                <path d="M14.04 10.58c-.03-2.67 2.18-3.95 2.28-4.01-1.24-1.81-3.17-2.06-3.86-2.09-1.64-.17-3.2.97-4.03.97-.84 0-2.13-.94-3.5-.92-1.8.03-3.46 1.05-4.39 2.66-1.87 3.24-.48 8.05 1.34 10.68.89 1.29 1.95 2.73 3.35 2.68 1.34-.05 1.85-.87 3.47-.87 1.62 0 2.07.87 3.49.84 1.45-.02 2.36-1.31 3.24-2.6 1.02-1.5 1.44-2.95 1.47-3.02-.03-.01-2.82-1.08-2.86-4.32zM11.37 2.95C12.1 2.07 12.59.87 12.46-.32c-1.03.04-2.28.69-3.02 1.55-.66.77-1.24 1.99-1.09 3.17 1.15.09 2.33-.58 3.02-1.45z" fill="#000"/>
+              </svg>
+              <span className="text-xs font-semibold text-black">Pay</span>
             </div>
             {/* Google Pay */}
-            <div className="flex h-8 items-center rounded bg-[#8a8279]/20 px-3">
-              <span className="text-xs font-semibold text-[#8a8279]">Google Pay</span>
+            <div className="flex h-10 items-center gap-1 rounded-lg border border-[#d4a054]/15 bg-white px-3">
+              <svg viewBox="0 0 24 24" className="h-4 w-auto">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.97 10.97 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              <span className="text-xs font-semibold text-[#5f6368]">Pay</span>
             </div>
           </div>
           <p className="mt-4 text-xs text-[#8a8279]/60">
