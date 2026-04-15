@@ -7,7 +7,10 @@ import { isBlocked, recordRejection } from "@/lib/rate-limit";
 export const maxDuration = 60; // Allow up to 60 seconds for Gemini processing
 import { sendRateLimitAlert } from "@/lib/alert";
 
-const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const ALLOWED_TYPES = [
+  "image/jpeg", "image/png", "image/webp", "image/tiff", "image/bmp",
+  "image/gif", "image/heic", "image/heif", "image/avif",
+];
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 
 export async function POST(request: NextRequest) {

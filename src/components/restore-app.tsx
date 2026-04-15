@@ -225,7 +225,7 @@ export function RestoreApp() {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/jpeg,image/png,image/webp"
+              accept="image/jpeg,image/png,image/webp,image/tiff,image/bmp,image/gif,image/heic,image/heif,image/avif,.tif,.tiff,.bmp,.heic,.heif"
               onChange={onFileSelect}
               className="hidden"
             />
