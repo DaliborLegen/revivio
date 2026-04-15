@@ -44,6 +44,14 @@ export default function RootLayout({
       lang="sl"
       className={`${outfit.variable} ${cormorant.variable} h-full antialiased light`}
     >
+      <head>
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-HHV4P88VM5" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-HHV4P88VM5');`,
+          }}
+        />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
