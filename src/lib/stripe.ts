@@ -6,15 +6,15 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_place
 
 export const PLANS = {
   starter: {
-    monthly: "price_1TM4lZIS3TAeIJFvKs7X33Xm",
+    monthly: "price_1TPsmcEVGDT8nA6HJLZwUoXt",
     credits: 5,
   },
   pro: {
-    monthly: "price_1TM4maIS3TAeIJFvrd7dzbvo",
+    monthly: "price_1TPsofEVGDT8nA6HfDJBqkd3",
     credits: 30,
   },
   business: {
-    monthly: "price_1TM4nKIS3TAeIJFv3vnuDwLl",
+    monthly: "price_1TPsqPEVGDT8nA6He4CvyCNy",
     credits: 100,
   },
 } as const;
