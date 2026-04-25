@@ -34,6 +34,15 @@ export async function POST(request: NextRequest) {
 
     let customerId = profile?.stripe_customer_id;
 
+    if (customerId) {
+      try {
+        const existing = await stripe.customers.retrieve(customerId);
+        if (existing.deleted) customerId = null;
+      } catch {
+        customerId = null;
+      }
+    }
+
     if (!customerId) {
       const customer = await stripe.customers.create({
         email: user.email,
