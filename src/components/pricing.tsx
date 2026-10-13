@@ -163,6 +163,12 @@ export function Pricing() {
                     </>
                   )}
                 </button>
+                {!isFree && (
+                  <p className="-mt-4 mb-6 text-[11.5px] leading-snug text-[#6a6259]">
+                    {p.renewNote}{" "}
+                    <a href="/pogoji" className="text-[#d4a054] underline underline-offset-2">{t.footer.terms}</a>
+                  </p>
+                )}
 
                 {/* Features */}
                 <ul className="flex-1 space-y-3">

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Outfit, Cormorant_Garamond } from "next/font/google";
-import Script from "next/script";
+import { CookieConsent } from "@/components/cookie-consent";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -46,14 +46,8 @@ export default function RootLayout({
       className={`${outfit.variable} ${cormorant.variable} h-full antialiased light`}
     >
       <body className="min-h-full flex flex-col">
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-HHV4P88VM5"
-          strategy="afterInteractive"
-        />
-        <Script id="gtag-init" strategy="afterInteractive">
-          {`window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','G-HHV4P88VM5');`}
-        </Script>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

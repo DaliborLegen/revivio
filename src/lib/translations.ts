@@ -110,6 +110,7 @@ export const translations = {
       startFree: "Začni brezplačno",
       mostPopular: "Najbolj priljubljen",
       creditsPerMonth: "slik/mesec",
+      renewNote: "Mesečna naročnina se samodejno podaljša. Prekličete jo kadarkoli v profilu, velja do konca plačanega meseca. Z nakupom se strinjate s Pogoji uporabe in takojšnjim začetkom storitve, s čimer po prvi obnovi izgubite pravico do odstopa.",
       plans: [
         {
           name: "Brezplačno",
@@ -245,6 +246,7 @@ export const translations = {
       blog: "Blog",
       privacy: "Zasebnost",
       terms: "Pogoji uporabe",
+      cookies: "Nastavitve piškotkov",
       rights: "Vse pravice pridržane.",
     },
   },
@@ -359,6 +361,7 @@ export const translations = {
       startFree: "Start for free",
       mostPopular: "Most popular",
       creditsPerMonth: "photos/month",
+      renewNote: "The monthly subscription renews automatically. Cancel anytime in your profile, it stays active until the end of the paid month. By purchasing you agree to the Terms and to the service starting immediately, so you lose the right of withdrawal after the first restoration.",
       plans: [
         {
           name: "Free",
@@ -494,6 +497,7 @@ export const translations = {
       blog: "Blog",
       privacy: "Privacy",
       terms: "Terms of use",
+      cookies: "Cookie settings",
       rights: "All rights reserved.",
     },
   },

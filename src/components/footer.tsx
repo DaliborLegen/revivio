@@ -2,6 +2,7 @@
 
 import { useLang } from "@/lib/lang-context";
 import { Camera, Mail } from "lucide-react";
+import { CookieSettingsButton } from "@/components/cookie-consent";
 
 export function Footer() {
   const { t } = useLang();
@@ -82,14 +83,17 @@ export function Footer() {
             </h4>
             <ul className="mt-4 space-y-3">
               <li>
-                <a href="#" className="text-sm text-[#6a6259] transition-colors hover:text-[#f0ebe4]">
+                <a href="/zasebnost" className="text-sm text-[#6a6259] transition-colors hover:text-[#f0ebe4]">
                   {t.footer.privacy}
                 </a>
               </li>
               <li>
-                <a href="#" className="text-sm text-[#6a6259] transition-colors hover:text-[#f0ebe4]">
+                <a href="/pogoji" className="text-sm text-[#6a6259] transition-colors hover:text-[#f0ebe4]">
                   {t.footer.terms}
                 </a>
+              </li>
+              <li>
+                <CookieSettingsButton className="cursor-pointer text-sm text-[#6a6259] transition-colors hover:text-[#f0ebe4]" label={t.footer.cookies} />
               </li>
             </ul>
           </div>
