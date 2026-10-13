@@ -84,6 +84,20 @@ function DashboardContent() {
     load();
   }, []);
 
+  const [portalBusy, setPortalBusy] = useState(false);
+  // Stripe portal: preklic naročnine, zamenjava kartice, računi
+  const openPortal = async () => {
+    setPortalBusy(true);
+    try {
+      const r = await fetch("/api/billing-portal", { method: "POST" });
+      const j = await r.json();
+      if (j.url) window.location.href = j.url;
+      else alert(j.error || "Upravljanje naročnine ni uspelo.");
+    } finally {
+      setPortalBusy(false);
+    }
+  };
+
   const deleteRestoration = async (id: string) => {
     if (!confirm("Ali ste prepričani, da želite trajno izbrisati to obnovo?")) return;
     try {
@@ -171,6 +185,16 @@ function DashboardContent() {
               {d.managePlan}
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
+            {profile?.plan && profile.plan !== "free" && (
+              <button
+                type="button"
+                onClick={openPortal}
+                disabled={portalBusy}
+                className="inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-[#d4a054]/25 px-4 py-2 text-sm text-[#f0ebe4] hover:border-[#d4a054]/50 disabled:opacity-60"
+              >
+                {portalBusy ? "Odpiram …" : "Upravljaj naročnino (preklic, kartica, računi)"}
+              </button>
+            )}
           </div>
 
           {/* Credits card */}
